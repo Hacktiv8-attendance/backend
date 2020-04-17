@@ -30,6 +30,10 @@ module.exports = (sequelize, DataTypes) => {
     email: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: {
+        args: true,
+        msg: "Email has been registered"
+      },
       validate: {
         notNull: {
           args: true,
@@ -43,10 +47,6 @@ module.exports = (sequelize, DataTypes) => {
           args: true,
           msg: 'Invalid Email Format'
         }
-      },
-      unique: {
-        args: true,
-        msg: 'Email Has Been Registered'
       }
     },
     birthDate: {
@@ -117,7 +117,8 @@ module.exports = (sequelize, DataTypes) => {
           args: true,
           msg: "Paid Leave is Required"
         },
-      }
+      },
+      defaultValue: 12
     },
     superior: {
       type: DataTypes.INTEGER,

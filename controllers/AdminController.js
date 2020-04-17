@@ -84,7 +84,7 @@ class AdminController {
       returning: true
     })
       .then(response => {
-        res.status(200).json(response)
+        res.status(200).json(response[1][0])
       })
   }
 }

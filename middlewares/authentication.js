@@ -3,8 +3,8 @@ const { Employee } = require('../models')
 module.exports = function (req, res, next) {
     let token = req.headers.token
     if (token) {
-        req.decoded = verify(token)
-        console.log(token)
+        try {
+            req.decoded = verify(token)
             Employee.findOne({
                     where: {
                         email: req.decoded.email
@@ -24,6 +24,9 @@ module.exports = function (req, res, next) {
                 .catch(err => {
                     throw err
                 })
+        } catch (error) {
+            next(error)
+        }
     } else {
         next({
             status: 401,

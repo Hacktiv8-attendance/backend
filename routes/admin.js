@@ -7,6 +7,6 @@ router.use(authentification)
 
 router.get('/employee', AdminController.findAll)
 router.post('/employee', AdminController.addEmployee)
-router.post('/employee/:id', AdminController.addEmployee)
+router.put('/employee/:id', AdminController.updateEmployee)
 
 module.exports = router

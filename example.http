@@ -8,13 +8,9 @@
 
 GET  http://localhost:3000/admin/employee HTTP/1.1
 content-type: application/json
-token : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbmRyZWFzLmFuZ2dhcmFAZW1haWwuY29tIiwiYXV0aExldmVsIjoxLCJpYXQiOjE1ODcxMTUyODZ9.NlOuz8Dcrm9bMWUByWnkD1DJBbvaqgKC0yGThYyWVTM"
+token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbmRyZWFzLmFuZ2dhcmFAZW1haWwuY29tIiwiYXV0aExldmVsIjoxLCJpYXQiOjE1ODcxMTUyODZ9.NlOuz8Dcrm9bMWUByWnkD1DJBbvaqgKC0yGThYyWVTM"
 
-{
-    "email": "andreas.anggara@email.com",
-    "password": "admin123"
-}
-
+#
 
 POST http://localhost:3000/admin/addEmployee HTTP/1.1
 content-type: application/json
