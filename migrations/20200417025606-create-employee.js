@@ -15,7 +15,8 @@ module.exports = {
         type: Sequelize.STRING
       },
       email: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        unique: true
       },
       birthDate: {
         type: Sequelize.DATE
@@ -30,7 +31,8 @@ module.exports = {
         type: Sequelize.STRING
       },
       paidLeave: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        defaultValue: 12
       },
       superior: {
         type: Sequelize.INTEGER
