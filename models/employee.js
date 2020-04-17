@@ -158,7 +158,7 @@ module.exports = (sequelize, DataTypes) => {
   })
 
   Employee.associate = function(models) {
-    Employee.hasMany(models.AbsenceEmployee)
+    Employee.hasMany(models.Absence)
   };
   
   return Employee;

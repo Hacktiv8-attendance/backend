@@ -8,11 +8,26 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      key: {
-        type: Sequelize.STRING
+      EmployeeId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Employees",
+          key: "id"
+        },
+        onDelete: "cascade",
+        onUpdate: "cascade"
       },
-      timeStamp: {
+      in : {
         type: Sequelize.DATE
+      },
+      out: {
+        type: Sequelize.DATE
+      },
+      worktime: {
+        type: Sequelize.NUMBER
+      },
+      status: {
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,
