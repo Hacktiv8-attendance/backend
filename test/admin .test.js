@@ -337,7 +337,7 @@ describe('Login Admin', () => {
                     })
             })
         })
-        
+
         describe('Delete Employee Error', () => {
             test('Send object replied with status 500 Internal Server Error', (done) => {
                 request(app)
@@ -353,8 +353,6 @@ describe('Login Admin', () => {
             })
         })
     })
-
-
 
 })
 
