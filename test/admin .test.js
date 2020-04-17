@@ -35,6 +35,7 @@ describe("Employee Routes", () => {
             .create(adminData)
             .then(admin => {
                 let tokenAdmin = admin.tokenAdmin
+                let idAdmin = admin.id
                 done()
             })
             .catch(err => done(err))
@@ -120,7 +121,8 @@ describe('Login Admin', () => {
                 delete invalidForm.email
                 request(app)
                     .post('/register')
-                    .send(invalidForm)
+                    .set('token', tokenAdmin)
+                    .send(invalidForm)                    
                     .end((err, res) => {
                         expect(err).toBe(null)
                         expect(res.status).toBe(400)
@@ -139,6 +141,7 @@ describe('Login Admin', () => {
             test('Send wrong form replied with status 400 because invalid format email', (done) => {
                 request(app)
                     .post('/register')
+                    .set('token', tokenAdmin)
                     .send({
                         name: "Student Hacktiv8",
                         email: 'student@mail',
@@ -152,6 +155,80 @@ describe('Login Admin', () => {
                         expect(res.body.errors.length).toBeGreaterThan(0)
                         expect(res.body.errors).toContain("Invalid email format")
                         expect(res.body.errors).toContain("Password length must between 6 and 14")
+                        done()
+                    })
+            })
+        })
+    })
+
+
+// FIND ALL EMPLOYEE =================================================================================
+
+    describe('Find All Employee', () => {
+        describe('Find Employee Success', () => {
+            test('Send object replied with status 200 and json data employee', (done) => {
+                request(app)
+                    .post('/admin/employees')
+                    .set('token', tokenAdmin)
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(200)
+                        expect(res.body).toHaveProperty('employees', expect.any(Array))
+                        expect(res.body.employee.length).toBeGreaterThan(0)
+                        done()
+                    })
+            })
+        })
+
+        describe('Find All Employee Success', () => {
+            test('Send object replied with status 500 Internal Server Error', (done) => {
+                request(app)
+                    .post('/admin/employe')
+                    .set('token', tokenAdmin)
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(500)
+                        expect(res.body.error).toContain('Internal Server Error')
+                        done()
+                    })
+            })
+        })
+    })
+
+// FIND ONE EMPLOYEE =================================================================================
+
+    describe('Find One Employee', () => {
+        describe('Find One Employee Success', () => {
+            test('Send object replied with status 200 and json data about employee', (done) => {
+                request(app)
+                    .post('/admin/employees/:id')
+                    .set('token', tokenAdmin)
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(201)
+                        expect(res.body).toHaveProperty('id', expect.any(Number))
+                        expect(res.body).toHaveProperty('name', expect.any(String))
+                        expect(res.body).toHaveProperty('email', expect.any(String))
+                        expect(res.body).toHaveProperty('birthDate', expect.any(Date))
+                        expect(res.body).toHaveProperty('address', expect.any(String))
+                        expect(res.body).toHaveProperty('phoneNumber', expect.any(String))
+                        expect(res.body).toHaveProperty('role', expect.any(String))
+                        expect(res.body).toHaveProperty('authLevel', expect.any(Number))
+                        done()
+                    })
+            })
+        })
+
+        describe('Find One Employee Errpr', () => {
+            test('Send object replied with status 500 Internal Server Error', (done) => {
+                request(app)
+                    .post('/admin/employees/0')
+                    .set('token', tokenAdmin)
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(404)
+                        expect(res.body).toHaveProperty('error')
+                        expect(res.body.error).toContain('Data not found')
                         done()
                     })
             })
