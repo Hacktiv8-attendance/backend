@@ -1,35 +1,86 @@
 const request = require('supertest');
 const app = require('../app');
-const { sequelize } = require('../models');
+const { Employee } = require('../models')
+// const { sequelize } = require('../models');
 const { queryInterface } = sequelize;
 
 const registerForm = {
     name: "Andreas Anggara",
-    password: '123456',
-    email: 'mail@mail.com',
-    birthDate: new Date(),
+    password: hashPassword('admin123'),
+    email: 'andreas.anggara@email.com',
+    birthDate: new Date(21-01-96),
     address: 'Bogor',
-    phoneNumber: '123124124',
-    role: 'Staff',
-    superior: 1,
-    authLevel: 5
+    phoneNumber: '0812121212',
+    role: 'HRD',
+    authLevel: 1,
+    createdAt: new Date(),
+    updatedAt: new Date()
 }
 
 describe("Employee Routes", () => {
-    // beforeAll((done) => {
-    //     queryInterface.bulkInsert('Employee', [registerForm])
-    //       .then(_ => {
-    //         done()
-    //       })
-    //       .catch(err => done(err))
-    // })
-    afterAll((done) => {
-        queryInterface.bulkDelete('Employees', {})
-          .then(_ => {
-            done()
-          })
-          .catch(err => done(err))
+    beforeAll((done) => {
+        Employee
+            .create(registerForm)
+            .then(admin => {
+                let tokenAdmin = admin.tokenAdmin
+                done()
+            })
+            .catch(err => done(err))
     })
+    afterAll((done) => {
+        Employee
+            .destroy({
+                where: {}
+            })
+            .then(response => {
+                done()
+            })
+            .catch(err => done(err))
+    })
+
+// LOGIN =============================================================================s
+
+describe('Login Admin', () => {
+    describe('Login Success', () => {
+        test('Send object replied with status 200 and token', (done) => {
+            request(app)
+                .post('/admin/login')
+                .send({
+                    email: 'andreas.anggara@email.com',
+                    password: 'admin123'
+                })
+                .end((err, res) => {
+                    expect(err).toBe(null)
+                    expect(res.status).toBe(200)
+                    expect(res.body).toHaveProperty('token', expect.any(String))
+                    expect(res.body).toHaveProperty('payload')
+                    expect(res.body.payload).toHaveProperty('id')
+                    expect(res.body.payload).toHaveProperty('email')
+                    expect(res.body.payload).toHaveProperty('authLevel')
+                    done()
+                })
+        })
+    })
+    
+    describe('Login Employee Error', () => {
+        test('Send wrong form replied with status 401 because wrong password or wrong email', (done) => {
+            request(app)
+                .post('/admin/login')
+                .send({
+                    email: 'andreas.anggara@email.com',
+                    password: '12'
+                })
+                .end((err, res) => {
+                    expect(err).toBe(null)
+                    expect(res.status).toBe(400)
+                    expect(res.body).toHaveProperty('message', expect.any(String))
+                    expect(res.body).toHaveProperty('error')
+                    expect(res.status.error).toContain('Email/Password invalid')
+                    done()
+                })
+        })
+    })
+})
 
 // REGISTER =================================================================================
 
@@ -107,7 +158,7 @@ describe("Employee Routes", () => {
                 request(app)
                     .post('/employee/login')
                     .send({
-                        email: 'mail@mail.com',
+                        email: 'andreas.anggara@email.com',
                         password: '123456'
                     })
                     .end((err, res) => {
