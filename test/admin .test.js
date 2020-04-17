@@ -29,7 +29,7 @@ const registerForm = {
     updatedAt: new Date()
 }
 
-describe("Employee Routes", () => {
+describe("Admin Routes", () => {
     beforeAll((done) => {
         Employee
             .create(adminData)
