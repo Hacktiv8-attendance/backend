@@ -1,19 +1,14 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const Model = sequelize.Sequelize.Model
-  
-  class Absence extends Model {}
-
-  Absence.init({
-    key: DataTypes.STRING,
-    timeStamp: DataTypes.DATE
-  }, 
-  { 
-    sequlize 
-  })
-  
+  const Absence = sequelize.define('Absence', {
+    EmployeeId: DataTypes.INTEGER,
+    in : DataTypes.DATE,
+    out: DataTypes.DATE,
+    worktime: DataTypes.INTEGER,
+    status: DataTypes.BOOLEAN
+  }, {});
   Absence.associate = function(models) {
-    Absence.hasMany(models.AbsenceEmployee)
+    Absence.belongsTo(models.Employee)
   };
   return Absence;
 };
