@@ -11,7 +11,6 @@ module.exports = (sequelize, DataTypes) => {
   { 
     sequlize 
   })
-  
   Absence.associate = function(models) {
     Absence.hasMany(models.AbsenceEmployee)
   };
