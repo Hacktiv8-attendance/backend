@@ -2,10 +2,19 @@
 module.exports = (sequelize, DataTypes) => {
   const Absence = sequelize.define('Absence', {
     EmployeeId: DataTypes.INTEGER,
-    in : DataTypes.DATE,
+    in : {
+      type: DataTypes.DATE,
+      defaultValue: new Date()
+    },
     out: DataTypes.DATE,
-    worktime: DataTypes.INTEGER,
-    status: DataTypes.BOOLEAN
+    worktime: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0
+    },
+    status: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    }
   }, {});
   Absence.associate = function(models) {
     Absence.belongsTo(models.Employee)

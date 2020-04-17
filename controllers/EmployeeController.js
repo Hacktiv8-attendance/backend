@@ -1,0 +1,89 @@
+const { Employee, Absence } = require('../models')
+const { Op } = require('sequelize')
+const moment = require('moment')
+const { verify } = require('../helpers/jwt')
+class EmployeeController {
+  static login(req, res, next) {
+    const { email, password } = req.body
+    Employee.findOne({
+      where: {
+        email
+      }
+    })
+    .then(response => {
+      if (response) {
+          if (comparePassword(password, response.password)) {
+            let payload = {
+              id: response.id,
+              email: response.email,
+              authLevel: response.authLevel
+            }
+            let token = getToken(payload)
+            res.status(200).json({
+                token,
+                payload
+            })
+          } else {
+              next({
+                  status: 401,
+                  message: 'Email/Password invalid'
+              })
+          }
+      } else {
+          next({
+              status: 401,
+              message: 'Email/Password invalid'
+          })
+      }
+    })
+    .catch(next)
+  }
+  
+  static sendQR(req, res, next) {
+    const { jwt, EmployeeId } = req.body
+    try {
+      const payload = verify(jwt)
+      if(payload) {
+        if(payload.key === process.env.QRSECRET) {
+          Absence.findOne({
+            where: {
+              EmployeeId,
+              [Op.gte]: moment().subtract(1, 'day').toDate()
+            }
+          })
+            .then(response => {
+              if(response) {
+                let status;
+                const out = new Date()
+                let worktime = moment.duration(out.diff(response.in));
+                worktime = worktime.hours()
+                worktime >= 9 ? status = true : status = false 
+                Absence.update({
+                  out,
+                  worktime,
+                  status
+                }, {
+                  where: response.id
+                })
+                  .then(response => {
+                    res.status(200).json({ message: "Absence Updated" })
+                  })
+              } else {
+                Absence.create({
+                  EmployeeId,
+                })
+                  .then(response => {
+                    res.status(201).json({ message: "Absence Submitted" })
+                  })
+              }
+            })
+        } else res.status(400).json({ message: "Invalid QR CODE" })
+      }
+    } catch (error) {
+      
+    }
+  }
+
+}
+
+module.exports = EmployeeController
