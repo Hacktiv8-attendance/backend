@@ -1,6 +1,6 @@
 const request = require('supertest');
 const app = require('../app');
-const { Employee } = require('../models')
+const { Absence } = require('../models')
 // const { sequelize } = require('../models');
 const { queryInterface } = sequelize;
 
@@ -29,7 +29,7 @@ const registerForm = {
     updatedAt: new Date()
 }
 
-describe("Admin Routes", () => {
+describe("Absence Routes", () => {
     beforeAll((done) => {
         Employee
             .create(adminData)
@@ -60,59 +60,49 @@ describe("Admin Routes", () => {
             .catch(err => done(err))
     })
 
-// LOGIN =============================================================================s
+// GENERATE QR =============================================================================s
 
-describe('Login Admin', () => {
-    describe('Login Success', () => {
-        test('Send object replied with status 200 and token', (done) => {
-            request(app)
-                .post('/admin/login')
-                .send({
-                    email: 'andreas.anggara@email.com',
-                    password: 'admin123'
-                })
-                .end((err, res) => {
-                    expect(err).toBe(null)
-                    expect(res.status).toBe(200)
-                    expect(res.body).toHaveProperty('token', expect.any(String))
-                    expect(res.body).toHaveProperty('payload')
-                    expect(res.body.payload).toHaveProperty('id')
-                    expect(res.body.payload).toHaveProperty('email')
-                    expect(res.body.payload).toHaveProperty('authLevel')
-                    done()
-                })
+    describe('Generate QR', () => {
+        describe('Generate QR Success', () => {
+            test('Send object replied with status 200 and token', (done) => {
+                request(app)
+                    .get('/absence/generateQR')
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(200)
+                        expect(res.body).toHaveProperty('token', expect.any(String))
+                        done()
+                    })
+            })
+        })
+        
+        describe('Generate QR Error', () => {
+            test('Send object replied with status 500 and token', (done) => {
+                request(app)
+                    .get('/absence/generateQ')
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(500)
+                        expect(res.body).toHaveProperty('error')
+                        expect(res.body.error).toContain('Internal Server Error')
+                        done()
+                    })
+            })
         })
     })
-    
-    describe('Login Employee Error', () => {
-        test('Send wrong form replied with status 401 because wrong password or wrong email', (done) => {
-            request(app)
-                .post('/admin/login')
-                .send({
-                    email: 'andreas.anggara@email.com',
-                    password: '12'
-                })
-                .end((err, res) => {
-                    expect(err).toBe(null)
-                    expect(res.status).toBe(400)
-                    expect(res.body).toHaveProperty('message', expect.any(String))
-                    expect(res.body).toHaveProperty('error')
-                    expect(res.status.error).toContain('Email/Password invalid')
-                    done()
-                })
-        })
-    })
-})
 
 // ADD EMPLOYEE =================================================================================
 
-    describe('Add Employee', () => {
-        describe('Add Employee Success', () => {
+    describe('Add Absence Employee', () => {
+        describe('Add Absence Employee Success', () => {
             test('Send object replied with status 201 and json data about new employee', (done) => {
                 request(app)
-                    .post('/admin/addEmployee')
-                    .set('token', tokenAdmin)
-                    .send(registerForm)
+                    .post('/absence')
+                    .send({
+                        EmployeeId : userId,
+                        timeStamp: new Date()
+                    })
+                    // .send(registerForm)
                     .end((err, res) => {
                         expect(err).toBe(null)
                         expect(res.status).toBe(201)
@@ -122,48 +112,24 @@ describe('Login Admin', () => {
                     })
             })
         })
-        describe('Add Employee Error', () => {
-            test('Send wrong form replied with status 400 because required column is empty', (done) => {
-                let invalidForm = { ...registerForm }
-                delete invalidForm.password
-                delete invalidForm.name
-                delete invalidForm.email
-                request(app)
-                    .post('/admin/addEmployee')
-                    .set('token', tokenAdmin)
-                    .send(invalidForm)                    
-                    .end((err, res) => {
-                        expect(err).toBe(null)
-                        expect(res.status).toBe(400)
-                        expect(res.body).toHaveProperty('message', expect.any(String))
-                        expect(res.body).toHaveProperty('errors', expect.any(Array))
-                        expect(res.body.errors.length).toBeGreaterThan(0)
-                        expect(res.body.errors).toContain("Name is required")
-                        expect(res.body.errors).toContain("Email is required")
-                        expect(res.body.errors).toContain("Password is required")
-                        done()
-                    })
-            })
-        })
 
-        describe('Add Employee Error', () => {
-            test('Send wrong form replied with status 400 because invalid format email', (done) => {
+
+        describe('Add Absence Employee Error', () => {
+            test('Send wrong form replied with status 400 because required column is empty', (done) => {
                 request(app)
-                    .post('/admin/addEmployee')
-                    .set('token', tokenAdmin)
+                    .post('/absence')
                     .send({
-                        name: "Student Hacktiv8",
-                        email: 'student@mail',
-                        password: '156'
-                    })
+                        EmployeeId : '',
+                        timeStamp: ''
+                    })                  
                     .end((err, res) => {
                         expect(err).toBe(null)
                         expect(res.status).toBe(400)
                         expect(res.body).toHaveProperty('message', expect.any(String))
                         expect(res.body).toHaveProperty('errors', expect.any(Array))
                         expect(res.body.errors.length).toBeGreaterThan(0)
-                        expect(res.body.errors).toContain("Invalid email format")
-                        expect(res.body.errors).toContain("Password length must between 6 and 14")
+                        expect(res.body.errors).toContain("EmployeeId is required")
+                        expect(res.body.errors).toContain("timeStamp is required")
                         done()
                     })
             })
