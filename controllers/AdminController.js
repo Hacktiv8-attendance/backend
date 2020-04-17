@@ -84,9 +84,39 @@ class AdminController {
       returning: true
     })
       .then(response => {
-        res.status(200).json(response[1][0])
+        if(response) res.status(200).json(response[1][0])
+        else {
+          next({
+            status: 404,
+            message: "Employee not found"
+          })
+        }
       })
+      .catch(next)
   }
+
+  static deleteEmployee(req, res, next) {
+    Employee.destroy({
+      where: {
+        id: +req.params.id
+      }
+    })
+      .then(response => {
+        if(response) res.status(200).json({ message: "Employee Deleted" })
+        else next({ status: 404, message: "Employee not found" })
+      })
+      .catch(next)
+  }
+
+  static generateQR(req, res, next) {
+    const payload = {
+      key: "HACKTIV8MCC"
+    }
+    const token = getToken(payload)
+    res.status(200).json(token)
+  }
+
+
 }
 
 module.exports = AdminController
