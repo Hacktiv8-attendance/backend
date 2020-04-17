@@ -1,7 +1,7 @@
 {
   "development": {
-    "username": "postgres",
-    "password": "postgres",
+    "username": "user",
+    "password": "user",
     "database": "HRQ_development",
     "host": "localhost",
     "dialect": "postgres"
