@@ -24,7 +24,7 @@ module.exports = {
         type: Sequelize.DATE
       },
       worktime: {
-        type: Sequelize.NUMBER
+        type: Sequelize.INTEGER
       },
       status: {
         type: Sequelize.BOOLEAN

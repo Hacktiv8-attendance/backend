@@ -5,3 +5,19 @@ content-type: application/json
     "email": "andreas.anggara@email.com",
     "password": "admin123"
 }
+
+POST http://localhost:3000/admin/addEmployee HTTP/1.1
+content-type: application/json
+token : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbmRyZWFzLmFuZ2dhcmFAZW1haWwuY29tIiwiYXV0aExldmVsIjoxLCJpYXQiOjE1ODcxMDkxMzN9.TGv0x_-YH_zpN7-pZzr0wEvAnkdH3dnj1LskpIISX30"
+
+{
+    "name": "Andreas Anggara",
+      "password": "user123",
+      "email": "andreas.anggara@email.com",
+      "birthDate": "2015-03-25",
+      "address": "Bogor",
+      "phoneNumber": "0812121212",
+      "role": "Manager",
+      "authLevel": 2,
+      "superior": 1
+}

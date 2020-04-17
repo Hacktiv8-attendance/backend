@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     EmployeeId: DataTypes.INTEGER,
     in : DataTypes.DATE,
     out: DataTypes.DATE,
-    worktime: DataTypes.NUMBER,
+    worktime: DataTypes.INTEGER,
     status: DataTypes.BOOLEAN
   }, {});
   Absence.associate = function(models) {
