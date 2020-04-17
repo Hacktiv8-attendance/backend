@@ -4,7 +4,7 @@ const { Employee } = require('../models')
 // const { sequelize } = require('../models');
 const { queryInterface } = sequelize;
 
-const registerForm = {
+const adminData = {
     name: "Andreas Anggara",
     password: hashPassword('admin123'),
     email: 'andreas.anggara@email.com',
@@ -16,11 +16,23 @@ const registerForm = {
     createdAt: new Date(),
     updatedAt: new Date()
 }
+const registerForm = {
+    name: "Student Hacktiv8",
+    password: '123456',
+    email: 'student@mail.com',
+    birthDate: new Date(21-01-96),
+    address: 'Bogor',
+    phoneNumber: '0812121212',
+    role: 'staff',
+    authLevel: 3,
+    createdAt: new Date(),
+    updatedAt: new Date()
+}
 
 describe("Employee Routes", () => {
     beforeAll((done) => {
         Employee
-            .create(registerForm)
+            .create(adminData)
             .then(admin => {
                 let tokenAdmin = admin.tokenAdmin
                 done()
@@ -82,112 +94,69 @@ describe('Login Admin', () => {
     })
 })
 
-// REGISTER =================================================================================
+// ADD EMPLOYEE =================================================================================
 
-    // describe('Register Employee', () => {
-    //     describe('Register Success', () => {
-    //         test('Send object replied with status 201 and json data about new user', (done) => {
-    //             request(app)
-    //                 .post('/register')
-    //                 .send(registerForm)
-    //                 .end((err, res) => {
-    //                     expect(err).toBe(null)
-    //                     expect(res.status).toBe(201)
-    //                     expect(res.body).toHaveProperty('name', registerForm.name)
-    //                     expect(res.body).toHaveProperty('id', expect.any(Number))
-    //                     expect(res.body).toHaveProperty('email', registerForm.email)
-    //                     done()
-    //                 })
-    //         })
-    //     })
-    //     describe('Register Employee Error', () => {
-    //         test('Send wrong form replied with status 400 because required column is empty', (done) => {
-    //             let invalidForm = { ...registerForm }
-    //             delete invalidForm.password
-    //             delete invalidForm.name
-    //             delete invalidForm.email
-    //             request(app)
-    //                 .post('/register')
-    //                 .send(invalidForm)
-    //                 .end((err, res) => {
-    //                     expect(err).toBe(null)
-    //                     expect(res.status).toBe(400)
-    //                     expect(res.body).toHaveProperty('message', expect.any(String))
-    //                     expect(res.body).toHaveProperty('errors', expect.any(Array))
-    //                     expect(res.body.errors.length).toBeGreaterThan(0)
-    //                     expect(res.body.errors).toContain("Name is required")
-    //                     expect(res.body.errors).toContain("Email is required")
-    //                     expect(res.body.errors).toContain("Password is required")
-    //                     done()
-    //                 })
-    //         })
-    //     })
-
-    //     describe('Register Employee Error', () => {
-    //         test('Send wrong form replied with status 400 because invalid format email', (done) => {
-    //             let invalidForm = { ...registerForm }
-    //             delete invalidForm.password
-    //             delete invalidForm.name
-    //             delete invalidForm.email
-    //             request(app)
-    //                 .post('/register')
-    //                 .send({
-    //                     name: "Andreas Anggara",
-    //                     password: 'test',
-    //                     email: 'andreas.anggara@emaom',
-    //                 })
-    //                 .end((err, res) => {
-    //                     expect(err).toBe(null)
-    //                     expect(res.status).toBe(400)
-    //                     expect(res.body).toHaveProperty('message', expect.any(String))
-    //                     expect(res.body).toHaveProperty('errors', expect.any(Array))
-    //                     expect(res.body.errors.length).toBeGreaterThan(0)
-    //                     expect(res.body.errors).toContain("Invalid email format")
-    //                     expect(res.body.errors).toContain("Password length must between 6 and 14")
-    //                     done()
-    //                 })
-    //         })
-    //     })
-    // })
-
-// LOGIN =============================================================================s
-
-    describe('Login Employee', () => {
-        describe('Login Success', () => {
-            test('Send object replied with status 200 and token', (done) => {
+    describe('Add Employee', () => {
+        describe('Add Employee Success', () => {
+            test('Send object replied with status 201 and json data about new employee', (done) => {
                 request(app)
-                    .post('/employee/login')
-                    .send({
-                        email: 'andreas.anggara@email.com',
-                        password: '123456'
-                    })
+                    .post('/admin/addEmployee')
+                    .set('token', tokenAdmin)
+                    .send(registerForm)
                     .end((err, res) => {
                         expect(err).toBe(null)
-                        expect(res.status).toBe(200)
-                        expect(res.body).toHaveProperty('token', expect.any(String))
+                        expect(res.status).toBe(201)
+                        expect(res.body).toHaveProperty('id', expect.any(Number))
+                        expect(res.body).toHaveProperty('name', registerForm.name)
                         done()
                     })
             })
         })
-        
-        describe('Login Employee Error', () => {
-            test('Send wrong form replied with status 401 because wrong password or wrong email', (done) => {
+        describe('Add Employee Error', () => {
+            test('Send wrong form replied with status 400 because required column is empty', (done) => {
+                let invalidForm = { ...registerForm }
+                delete invalidForm.password
+                delete invalidForm.name
+                delete invalidForm.email
                 request(app)
-                    .post('/employee/login')
+                    .post('/register')
+                    .send(invalidForm)
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(400)
+                        expect(res.body).toHaveProperty('message', expect.any(String))
+                        expect(res.body).toHaveProperty('errors', expect.any(Array))
+                        expect(res.body.errors.length).toBeGreaterThan(0)
+                        expect(res.body.errors).toContain("Name is required")
+                        expect(res.body.errors).toContain("Email is required")
+                        expect(res.body.errors).toContain("Password is required")
+                        done()
+                    })
+            })
+        })
+
+        describe('Add Employee Error', () => {
+            test('Send wrong form replied with status 400 because invalid format email', (done) => {
+                request(app)
+                    .post('/register')
                     .send({
-                        email: 'andreas.anggara@email.com',
-                        password: '12'
+                        name: "Student Hacktiv8",
+                        email: 'student@mail',
+                        password: '156'
                     })
                     .end((err, res) => {
                         expect(err).toBe(null)
                         expect(res.status).toBe(400)
                         expect(res.body).toHaveProperty('message', expect.any(String))
-                        expect(res.body).toHaveProperty('error')
-                        expect(res.status.error).toContain('Invalid email / password')
+                        expect(res.body).toHaveProperty('errors', expect.any(Array))
+                        expect(res.body.errors.length).toBeGreaterThan(0)
+                        expect(res.body.errors).toContain("Invalid email format")
+                        expect(res.body.errors).toContain("Password length must between 6 and 14")
                         done()
                     })
             })
         })
     })
+
 })
 
