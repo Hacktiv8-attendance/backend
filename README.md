@@ -2,7 +2,6 @@
 
 A. Employee
 -login
--scan(post: token qr)
 
 B. Admin
 -login
