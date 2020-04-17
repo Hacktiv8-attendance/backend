@@ -110,7 +110,7 @@ class AdminController {
 
   static generateQR(req, res, next) {
     const payload = {
-      key: "HACKTIV8MCC"
+      key: process.env.QRSECRET
     }
     const token = getToken(payload)
     res.status(200).json(token)
