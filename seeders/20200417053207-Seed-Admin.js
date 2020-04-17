@@ -12,6 +12,19 @@ module.exports = {
       authLevel: 1,
       createdAt: new Date(),
       updatedAt: new Date()
+    }, {
+      name: "Xavier Thufail",
+      password: hashPassword('xavier123'),
+      email: 'xavier.thufail@email.com',
+      birthDate: new Date(21-01-90),
+      address: 'Depok',
+      phoneNumber: '0812121212',
+      role: 'Manager',
+      authLevel: 2,
+      superior: 1,
+      paidLeave: 12,
+      createdAt: new Date(),
+      updatedAt: new Date()
     }], {});
   },
 

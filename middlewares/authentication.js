@@ -3,12 +3,11 @@ const { Employee } = require('../models')
 module.exports = function (req, res, next) {
     let token = req.headers.token
     if (token) {
-        try {
-            req.decoded = verify(token)
+        req.decoded = verify(token)
+        console.log(token)
             Employee.findOne({
                     where: {
-                        email: req.decoded.email,
-                        id: req.decoded.id,
+                        email: req.decoded.email
                     }
             })
                 .then(response => {
@@ -25,9 +24,6 @@ module.exports = function (req, res, next) {
                 .catch(err => {
                     throw err
                 })
-        } catch (error) {
-            next(error)
-        }
     } else {
         next({
             status: 401,
