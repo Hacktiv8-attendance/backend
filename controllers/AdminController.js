@@ -41,9 +41,21 @@ class AdminController {
               message: 'Email/Password invalid'
           })
       }
-  })
-  .catch(next)
+    })
+    .catch(next)
   }
+
+  static findAll(req, res, next) {
+    Employee.findAll({
+      order: ["authLevel"]
+    })
+      .then(response => {
+        res.status(200).json(response)
+      })
+      .catch(next)
+  }
+
+
   static addEmployee(req, res, next) {
     const { name, email, password, birthDate, address, phoneNumber, role, paidLeave, superior, authLevel} = req.body
     const newbirthDate = new Date(birthDate)
