@@ -6,7 +6,7 @@ const { queryInterface } = sequelize;
 const registerForm = {
     name: "Andreas Anggara",
     password: '123456',
-    email: 'andreas.anggara@email.com',
+    email: 'mail@mail.com',
     birthDate: new Date(),
     address: 'Bogor',
     phoneNumber: '123124124',
@@ -107,7 +107,7 @@ describe("Employee Routes", () => {
                 request(app)
                     .post('/employee/login')
                     .send({
-                        email: 'andreas.anggara@email.com',
+                        email: 'mail@mail.com',
                         password: '123456'
                     })
                     .end((err, res) => {
