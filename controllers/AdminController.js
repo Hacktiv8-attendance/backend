@@ -49,10 +49,9 @@ class AdminController {
   }
 
   static findAll(req, res, next) {
-    Employee.findAll({
-      order: ["authLevel"]
-    })
+    Employee.findAll()
       .then(response => {
+        response.map(el => delete el.password)
         res.status(200).json(response)
       })
       .catch(next)
@@ -123,8 +122,6 @@ class AdminController {
     const token = getToken(payload)
     res.status(200).json({token})
   }
-
-
 }
 
 module.exports = AdminController
