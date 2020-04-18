@@ -13,13 +13,12 @@ aws.config.update({
   accessKeyId: process.env.ACCESS_KEY,
   region: 'ap-southeast-1'
 })
-
+console.log(process.env.ACCESS_KEY)
 const upload = multer({
   storage: multerS3({
     s3: s3,
     bucket: 'hrq-employee-photo',
     key: (req, file, cb) => {
-      console.log(file)
       cb(null, new Date() + file.originalname)
     }
   })

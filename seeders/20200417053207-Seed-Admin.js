@@ -9,7 +9,7 @@ module.exports = {
       address: 'Bogor',
       phoneNumber: '0812121212',
       role: 'HRD',
-      image_url: "https://drive.google.com/file/d/1kaW4lAGSRs3EjqPL9u_G3mRSw20je8y_/preview",
+      image_url: "https://lh3.googleusercontent.com/Ci-Xhw2LdecxewYi7VBy9Z2LYtWXIYk_av3jvj8H8efF8eQXc6-NFZ_yuvRPDov9GWC8SCuIkU6V7wV4lvJK=w1299-h639",
       authLevel: 1,
       createdAt: new Date(),
       updatedAt: new Date()
@@ -23,7 +23,7 @@ module.exports = {
       role: 'Manager',
       authLevel: 2,
       superior: 1,
-      image_url: "https://drive.google.com/file/d/16gW6p-ucpJOoJsyCFXWEnZA5sH9y7CHP/preview",
+      image_url: "https://lh6.googleusercontent.com/8MSFOtFk30Eto5q7BSDuExiBdXgkq2a_fX10h0yzP4Qr9-q_DUDL86D4v0lw-DAecw2yTxJObc9kGX9BO-H5=w1299-h639",
       paidLeave: 12,
       createdAt: new Date(),
       updatedAt: new Date()
