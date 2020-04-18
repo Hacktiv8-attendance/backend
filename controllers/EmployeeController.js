@@ -92,6 +92,13 @@ class EmployeeController {
     }
   }
 
+  static findEmployee(req, res, next) {
+    Employee.findAll({
+      where: {
+        superior: +req.params.id
+      }
+    })
+  }
 }
 
 module.exports = EmployeeController

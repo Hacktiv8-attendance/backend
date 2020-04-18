@@ -1,11 +1,11 @@
 const AdminController = require('../controllers/AdminController')
 const router = require('express').Router()
-const authentification = require('../middlewares/authentication')
+const authentication = require('../middlewares/authentication')
 
 
 router.post('/login', AdminController.login)
 
-router.use(authentification)
+router.use(authentication)
 
 router.get('/QR', AdminController.generateQR)
 router.get('/employee', AdminController.findAll)
