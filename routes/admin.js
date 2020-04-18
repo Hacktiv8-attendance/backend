@@ -1,6 +1,8 @@
 const AdminController = require('../controllers/AdminController')
 const router = require('express').Router()
 const authentification = require('../middlewares/authentication')
+
+
 router.post('/login', AdminController.login)
 
 router.use(authentification)
