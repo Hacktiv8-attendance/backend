@@ -156,7 +156,6 @@ describe('Login Admin', () => {
                     expect(err).toBe(null)
                     expect(res.status).toBe(401)
                     expect(res.body).toHaveProperty('message', 'Email/Password invalid')
-                    // expect(res.status.message).toContain()
                     done()
                 })
         })

@@ -78,58 +78,58 @@ describe("Employee Routes", () => {
 
 // LOGIN =============================================================================s
 
-    // describe('Send QR Employee', () => {
-    //     describe('Send QR for second time Success', () => {
-    //         test('Send object replied with status 200 and message', (done) => {
-    //             request(app)
-    //                 .post('/employee/QR')
-    //                 .send({
-    //                     email: 'mail@mail.com',
-    //                     password: '123456'
-    //                 })
-    //                 .end((err, res) => {
-    //                     expect(err).toBe(null)
-    //                     expect(res.status).toBe(200)
-    //                     expect(res.body).toHaveProperty('message', "Absence Updated")
-    //                     done()
-    //                 })
-    //         })
-    //     })
+    describe('Send QR Employee', () => {
+        describe('Send QR for second time Success', () => {
+            test('Send object replied with status 200 and message', (done) => {
+                request(app)
+                    .post('/employee/QR')
+                    .send({
+                        email: 'mail@mail.com',
+                        password: '123456'
+                    })
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(200)
+                        expect(res.body).toHaveProperty('message', "Absence Updated")
+                        done()
+                    })
+            })
+        })
 
-    //     describe('Send QR for first time Success', () => {
-    //         test('Send object replied with status 200 and message', (done) => {
-    //             request(app)
-    //                 .post('/employee/QR')
-    //                 .send({
-    //                     email: 'mail@mail.com',
-    //                     password: '123456'
-    //                 })
-    //                 .end((err, res) => {
-    //                     expect(err).toBe(null)
-    //                     expect(res.status).toBe(201)
-    //                     expect(res.body).toHaveProperty('message', "Absence Submitted")
-    //                     done()
-    //                 })
-    //         })
-    //     })
+        describe('Send QR for first time Success', () => {
+            test('Send object replied with status 200 and message', (done) => {
+                request(app)
+                    .post('/employee/QR')
+                    .send({
+                        email: 'mail@mail.com',
+                        password: '123456'
+                    })
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(201)
+                        expect(res.body).toHaveProperty('message', "Absence Submitted")
+                        done()
+                    })
+            })
+        })
         
-    //     describe('Login Employee Error', () => {
-    //         test('Send wrong form replied with status 401 because wrong password or wrong email', (done) => {
-    //             request(app)
-    //                 .post('/employee/login')
-    //                 .send({
-    //                     email: 'andreas.anggara@email.com',
-    //                     password: '12'
-    //                 })
-    //                 .end((err, res) => {
-    //                     expect(err).toBe(null)
-    //                     expect(res.status).toBe(400)
-    //                     expect(res.body).toHaveProperty('message', expect.any(String))
-    //                     expect(res.body).toHaveProperty('error', 'Email/Password invalid')
-    //                     done()
-    //                 })
-    //         })
-    //     })
-    // })
+        describe('Login Employee Error', () => {
+            test('Send wrong form replied with status 401 because wrong password or wrong email', (done) => {
+                request(app)
+                    .post('/employee/login')
+                    .send({
+                        email: 'andreas.anggara@email.com',
+                        password: '12'
+                    })
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(400)
+                        expect(res.body).toHaveProperty('message', expect.any(String))
+                        expect(res.body).toHaveProperty('error', 'Email/Password invalid')
+                        done()
+                    })
+            })
+        })
+    })
 })
 
