@@ -1,7 +1,9 @@
 const { Employee, Absence } = require('../models')
+const { comparePassword } = require ('../helpers/bcrypt')
 const { Op } = require('sequelize')
 const moment = require('moment')
-const { verify } = require('../helpers/jwt')
+const {verify, getToken } = require('../helpers/jwt')
+
 class EmployeeController {
   static login(req, res, next) {
     const { email, password } = req.body
@@ -12,7 +14,8 @@ class EmployeeController {
     })
     .then(response => {
       if (response) {
-          if (comparePassword(password, response.password)) {
+        if (comparePassword(password, response.password)) {
+          console.log('MASUK RESPONSE COMPARE')
             let payload = {
               id: response.id,
               email: response.email,
