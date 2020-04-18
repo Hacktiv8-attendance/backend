@@ -49,7 +49,9 @@ class AdminController {
   }
 
   static findAll(req, res, next) {
-    Employee.findAll()
+    Employee.findAll({
+      order: ["id"]
+    })
       .then(response => {
         res.status(200).json(response)
       })
@@ -102,14 +104,25 @@ class AdminController {
   }
 
   static deleteEmployee(req, res, next) {
-    Employee.destroy({
+    let payload;
+    Employee.findOne({
       where: {
         id: +req.params.id
       }
     })
       .then(response => {
-        if(response) res.status(200).json({ message: "Employee Deleted" })
-        else next({ status: 404, message: "Employee not found" })
+        if(response) {
+          payload = response
+          return Employee.destroy({
+            where: {
+              id: +req.params.id
+            }
+          })
+        }
+      })
+      .then(response => {
+        if(payload) res.status(200).json(payload)
+        else res.status(404).json({message: "Employee Not Found"})
       })
       .catch(next)
   }
