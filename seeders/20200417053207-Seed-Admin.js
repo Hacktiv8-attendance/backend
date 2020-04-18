@@ -37,7 +37,7 @@ module.exports = {
       role: 'CEO',
       authLevel: 1,
       superior: 1,
-      image_url: "https://lh3.google.com/u/0/d/1scpkyZvWluCYbRqJZC6VoNqFE7Hekb5l=w1299-h639-iv1",
+      image_url: "https://lh5.googleusercontent.com/UC9JgxU6wa4X5Evev-zTUvUeuzx03n9aNB0SeXCQLDLuU2jVnfzZJaqW7rRNuHNwR0ngZzw8kwv35hSwgbw1=w1299-h639",
       paidLeave: 12,
       createdAt: new Date(),
       updatedAt: new Date()
@@ -51,7 +51,7 @@ module.exports = {
       role: 'Manager',
       authLevel: 2,
       superior: 1,
-      image_url: "https://lh3.google.com/u/0/d/1wYBmdEz6BcMbxmy4J8q0H-v_cLx0yXOW=w1299-h601-iv1",
+      image_url: "https://lh3.googleusercontent.com/YJyd9RkCOmVQAxyyXPWBL-DyWoaC3CH8B1KJwdqnVYWBui6YUuiSRmrN12ZV1wUBMj2fVO_VVtlrXRjV84Bo=w1299-h639",
       paidLeave: 12,
       createdAt: new Date(),
       updatedAt: new Date()
