@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
   Employee.init({
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
+      // allowNull: false,
     },
     password: {
       type: DataTypes.STRING,
@@ -51,102 +51,102 @@ module.exports = (sequelize, DataTypes) => {
     },
     birthDate: {
       type: DataTypes.DATE,
-      allowNull: false,
-      validate: {
-        notNull: {
-          args: true,
-          msg: 'BirtDate is Required'
-        },
-        notEmpty: {
-          args: true,
-          msg: "BirthDate is Required"
-        },
-      }
+      // allowNull: false,
+      // validate: {
+      //   notNull: {
+      //     args: true,
+      //     msg: 'BirtDate is Required'
+      //   },
+      //   notEmpty: {
+      //     args: true,
+      //     msg: "BirthDate is Required"
+      //   },
+      // }
     },
     address: {
       type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: {
-          args: true,
-          msg: 'Address is Required'
-        },
-        notEmpty: {
-          args: true,
-          msg: "Address is Required"
-        },
-      }
+      // allowNull: false,
+      // validate: {
+      //   notNull: {
+      //     args: true,
+      //     msg: 'Address is Required'
+      //   },
+      //   notEmpty: {
+      //     args: true,
+      //     msg: "Address is Required"
+      //   },
+      // }
     },
     phoneNumber: {
       type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: {
-          args: true,
-          msg: 'Phone Number is Required'
-        },
-        notEmpty: {
-          args: true,
-          msg: "Phone Number is Required"
-        },
-      }
+      // allowNull: false,
+      // validate: {
+      //   notNull: {
+      //     args: true,
+      //     msg: 'Phone Number is Required'
+      //   },
+      //   notEmpty: {
+      //     args: true,
+      //     msg: "Phone Number is Required"
+      //   },
+      // }
     },
     role: {
       type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: {
-          args: true,
-          msg: 'Role is Required'
-        },
-        notEmpty: {
-          args: true,
-          msg: "Role is Required"
-        },
-      }
+      // allowNull: false,
+      // validate: {
+      //   notNull: {
+      //     args: true,
+      //     msg: 'Role is Required'
+      //   },
+      //   notEmpty: {
+      //     args: true,
+      //     msg: "Role is Required"
+      //   },
+      // }
     },
     paidLeave: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        notNull: {
-          args: true,
-          msg: 'Paid Leave is Required'
-        },
-        notEmpty: {
-          args: true,
-          msg: "Paid Leave is Required"
-        },
-      },
+      // allowNull: false,
+      // validate: {
+      //   notNull: {
+      //     args: true,
+      //     msg: 'Paid Leave is Required'
+      //   },
+      //   notEmpty: {
+      //     args: true,
+      //     msg: "Paid Leave is Required"
+      //   },
+      // },
       defaultValue: 12
     },
     superior: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        notNull: {
-          args: true,
-          msg: 'Superior is Required'
-        },
-        notEmpty: {
-          args: true,
-          msg: "Superior is Required"
-        },
-      }
+      // allowNull: false,
+      // validate: {
+      //   notNull: {
+      //     args: true,
+      //     msg: 'Superior is Required'
+      //   },
+      //   notEmpty: {
+      //     args: true,
+      //     msg: "Superior is Required"
+      //   },
+      // }
     },
     authLevel: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        notNull: {
-          args: true,
-          msg: 'Superior is Required'
-        },
-        notEmpty: {
-          args: true,
-          msg: "Superior is Required"
-        },
-      }
+      // allowNull: false,
+      // validate: {
+      //   notNull: {
+      //     args: true,
+      //     msg: 'Superior is Required'
+      //   },
+      //   notEmpty: {
+      //     args: true,
+      //     msg: "Superior is Required"
+      //   },
+      // }
     }
   }, 
   {
