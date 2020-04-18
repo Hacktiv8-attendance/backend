@@ -27,6 +27,34 @@ module.exports = {
       paidLeave: 12,
       createdAt: new Date(),
       updatedAt: new Date()
+    }, {
+      name: "Abdul Basith K",
+      password: hashPassword('abdul123'),
+      email: 'abdul.basith@gmail.com',
+      birthDate: new Date("1997-01-21"),
+      address: 'Depok',
+      phoneNumber: '0812121212',
+      role: 'CEO',
+      authLevel: 1,
+      superior: 1,
+      image_url: "https://lh3.google.com/u/0/d/1scpkyZvWluCYbRqJZC6VoNqFE7Hekb5l=w1299-h639-iv1",
+      paidLeave: 12,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }, {
+      name: "Tamara Zulaika",
+      password: hashPassword('tamara123'),
+      email: 'tamara.zulaika@gmail.com',
+      birthDate: new Date("1996-01-01"),
+      address: 'Tangerang',
+      phoneNumber: '0812121212',
+      role: 'Manager',
+      authLevel: 2,
+      superior: 1,
+      image_url: "https://lh3.google.com/u/0/d/1wYBmdEz6BcMbxmy4J8q0H-v_cLx0yXOW=w1299-h601-iv1",
+      paidLeave: 12,
+      createdAt: new Date(),
+      updatedAt: new Date()
     }], {});
   },
 
