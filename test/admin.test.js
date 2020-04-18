@@ -1,5 +1,6 @@
 const request = require('supertest');
-const app = require('../app');
+// const server = require('../server');
+const server = require('../bin/http')
 const { Employee } = require('../models')
 const { getToken } = require('../helpers/jwt')
 const { comparePassword } = require('../helpers/bcrypt')
@@ -107,7 +108,7 @@ describe("Admin Routes", () => {
 describe('Login Admin', () => {
     describe('Login Success', () => {
         test('Send object replied with status 200 and token', (done) => {
-            request(app)
+            request(server)
                 .post('/admin/login')
                 .send({
                     email: 'andreas.anggara@email.com',
@@ -126,9 +127,9 @@ describe('Login Admin', () => {
         })
     })
     
-    describe('Login Employee Error', () => {
+    describe('Login Admin Error', () => {
         test('Send wrong form replied with status 401 because wrong password or wrong email', (done) => {
-            request(app)
+            request(server)
                 .post('/admin/login')
                 .send({
                     email: 'andreas.anggara@email.com',
@@ -146,7 +147,7 @@ describe('Login Admin', () => {
 
     describe('Login Employee Error', () => {
         test('Send wrong form replied with status 401 because wrong email', (done) => {
-            request(app)
+            request(server)
                 .post('/admin/login')
                 .send({
                     email: 'andreas.anggara@emaiom',
@@ -167,7 +168,7 @@ describe('Login Admin', () => {
     describe('Add Employee', () => {
         describe('Add Employee Success', () => {
             test('Send object replied with status 201 and json data about new employee', (done) => {
-                request(app)
+                request(server)
                     .post('/admin/employee')
                     .set('token', tokenAdmin)
                     .send(registerForm)
@@ -183,7 +184,7 @@ describe('Login Admin', () => {
 
         describe('Add Employee Error', () => {
             test('Send wrong form replied with status 400 because required column is empty', (done) => {
-                request(app)
+                request(server)
                     .post('/admin/employee')
                     .set('token', tokenAdmin)
                     .send({})                    
@@ -209,7 +210,7 @@ describe('Login Admin', () => {
 
         describe('Add Employee Error', () => {
             test('Send wrong form replied with status 400 because invalid format email and password less than 6 character', (done) => {
-                request(app)
+                request(server)
                     .post('/admin/employee')
                     .set('token', tokenAdmin)
                     .send({
@@ -245,7 +246,7 @@ describe('Login Admin', () => {
     describe('Find All Employee', () => {
         describe('Find Employee Success', () => {
             test('Send object replied with status 200 and json data employee', (done) => {
-                request(app)
+                request(server)
                     .get('/admin/employee')
                     .set('token', tokenAdmin)
                     .end((err, res) => {
@@ -260,7 +261,7 @@ describe('Login Admin', () => {
 
         describe('Find All Employee Error', () => {
             test('Send object replied with status 500 Internal Server Error', (done) => {
-                request(app)
+                request(server)
                     .get('/admin/employe')
                     .set('token', tokenAdmin)
                     .end((err, res) => {
@@ -278,7 +279,7 @@ describe('Login Admin', () => {
     describe('Update Employee', () => {
         describe('Update Employee Success', () => {
             test('Send object replied with status 200 and json data about employee', (done) => {
-                request(app)
+                request(server)
                     .put(`/admin/employee/${userId}`)
                     .set('token', tokenAdmin)
                     .send({
@@ -305,7 +306,7 @@ describe('Login Admin', () => {
 
         describe('Update Employee Error', () => {
             test('Send object replied with status 404 Internal Server Error', (done) => {
-                request(app)
+                request(server)
                     .put('/admin/employee/3')
                     .set('token', tokenAdmin)
                     .end((err, res) => {
@@ -325,7 +326,7 @@ describe('Login Admin', () => {
     describe('Delete Employee', () => {
         describe('Delete Employee Success', () => {
             test('Send object replied with status 200 and json data about employee', (done) => {
-                request(app)
+                request(server)
                     .delete(`/admin/employee/${userId}`)
                     .set('token', tokenAdmin)
                     .end((err, res) => {
@@ -340,7 +341,7 @@ describe('Login Admin', () => {
 
         describe('Delete Employee Error', () => {
             test('Send object replied with status 500 Internal Server Error', (done) => {
-                request(app)
+                request(server)
                     .delete('/admin/employees/0')
                     .set('token', tokenAdmin)
                     .end((err, res) => {
@@ -360,7 +361,7 @@ describe('Login Admin', () => {
     describe('Generate QR', () => {
         describe('Generate QR Success', () => {
             test('Send object replied with status 200 and token', (done) => {
-                request(app)
+                request(server)
                     .get(`/admin/QR`)
                     .set('token', tokenAdmin)
                     .end((err, res) => {
@@ -375,7 +376,7 @@ describe('Login Admin', () => {
 
         describe('Generate QR Error', () => {
             test('Send object replied with status 500 Internal Server Error', (done) => {
-                request(app)
+                request(server)
                     .post('/admin/Q')
                     .set('token', tokenAdmin)
                     .end((err, res) => {

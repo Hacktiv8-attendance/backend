@@ -8,8 +8,8 @@
     "logging": false
   },
   "test": {
-    "username": "user",
-    "password": "user",
+    "username": "postgres",
+    "password": "postgres",
     "database": "HRQ_test",
     "host": "localhost",
     "dialect": "postgres",

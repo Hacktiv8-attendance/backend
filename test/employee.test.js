@@ -1,4 +1,5 @@
-const app = require('../app')
+// const server = require('../server')
+const server = require('../bin/http')
 const request = require('supertest')
 const { Employee } = require('../models')
 const { sequelize } = require('../models');
@@ -38,7 +39,7 @@ describe("Employee Routes", () => {
     describe('Login Employee', () => {
         describe('Login Success', () => {
             test('Send object replied with status 200 and token', (done) => {
-                request(app)
+                request(server)
                     .post('/employee/login')
                     .send({
                         email: 'mail@mail.com',
@@ -59,7 +60,7 @@ describe("Employee Routes", () => {
         
         describe('Login Employee Error', () => {
             test('Send wrong form replied with status 401 because wrong password or wrong email', (done) => {
-                request(app)
+                request(server)
                     .post('/employee/login')
                     .send({
                         email: 'andreas.anggara@email.com',
@@ -81,7 +82,7 @@ describe("Employee Routes", () => {
     // describe('Send QR Employee', () => {
     //     describe('Send QR for second time Success', () => {
     //         test('Send object replied with status 200 and message', (done) => {
-    //             request(app)
+    //             request(server)
     //                 .post('/employee/QR')
     //                 .send({
     //                     email: 'mail@mail.com',
@@ -98,7 +99,7 @@ describe("Employee Routes", () => {
 
     //     describe('Send QR for first time Success', () => {
     //         test('Send object replied with status 200 and message', (done) => {
-    //             request(app)
+    //             request(server)
     //                 .post('/employee/QR')
     //                 .send({
     //                     email: 'mail@mail.com',
@@ -115,7 +116,7 @@ describe("Employee Routes", () => {
         
     //     describe('Login Employee Error', () => {
     //         test('Send wrong form replied with status 401 because wrong password or wrong email', (done) => {
-    //             request(app)
+    //             request(server)
     //                 .post('/employee/login')
     //                 .send({
     //                     email: 'andreas.anggara@email.com',
