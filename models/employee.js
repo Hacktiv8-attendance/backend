@@ -147,6 +147,9 @@ module.exports = (sequelize, DataTypes) => {
       //     msg: "Superior is Required"
       //   },
       // }
+    },
+    image_url: {
+      type: DataTypes.STRING
     }
   }, 
   {

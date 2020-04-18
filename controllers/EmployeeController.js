@@ -98,6 +98,8 @@ class EmployeeController {
         superior: +req.params.id
       }
     })
+      .then(response => res.status(200).json(response))
+      .catch(next)
   }
 }
 
