@@ -11,7 +11,7 @@ class AdminController {
     })
     .then(response => {
       if (response) {
-          if (comparePassword(password, response.password)) {
+        if (comparePassword(password, response.password)) {
               if(response.authLevel === 1) {
                 let payload = {
                   id: response.id,
@@ -30,6 +30,7 @@ class AdminController {
               })
               }
           } else {
+            console.log('PASSWORDNYA SALAH')
               next({
                   status: 401,
                   message: 'Email/Password invalid'
@@ -42,7 +43,10 @@ class AdminController {
           })
       }
     })
-    .catch(next)
+    .catch(err => {
+      console.log(err)
+      next(err)
+    })
   }
 
   static findAll(req, res, next) {
@@ -92,7 +96,12 @@ class AdminController {
           })
         }
       })
-      .catch(next)
+      .catch(err => {
+        next({
+          status: 404,
+          message: "Employee not found"
+        })
+      })
   }
 
   static deleteEmployee(req, res, next) {
@@ -113,7 +122,7 @@ class AdminController {
       key: process.env.QRSECRET
     }
     const token = getToken(payload)
-    res.status(200).json(token)
+    res.status(200).json({token})
   }
 
 

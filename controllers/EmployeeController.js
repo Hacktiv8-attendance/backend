@@ -1,9 +1,9 @@
 const { Employee, Absence } = require('../models')
+const { comparePassword } = require ('../helpers/bcrypt')
 const { Op } = require('sequelize')
 const moment = require('moment')
-const { verify } = require('../helpers/jwt')
+const { verify, getToken } = require('../helpers/jwt')
 const { comparePassword } = require('../helpers/bcrypt')
-const { getToken } = require('../helpers/jwt')
 class EmployeeController {
   static login(req, res, next) {
     const { email, password } = req.body
