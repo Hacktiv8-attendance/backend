@@ -13,7 +13,4 @@ app.use(cors());
 app.use(router)
 app.use(errorHandler)
 
-app.listen(process.env.PORT, () => console.log(`You're listening to radio ${process.env.PORT}`));
-
-
 module.exports = app

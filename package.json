@@ -4,9 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "NODE_ENV=test jest",
-    "start": "nodemon app.js",
-    "dev": "NODE_ENV=development nodemon app.js",
+    "test": "NODE_ENV=test jest --runInBand --detectOpenHandles",
+    "dev": "NODE_ENV=development nodemon bin/http.js",
     "reset": "sequelize db:drop && sequelize db:create && sequelize db:migrate && sequelize db:seed:all"
   },
   "repository": {

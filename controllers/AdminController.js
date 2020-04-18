@@ -31,7 +31,6 @@ class AdminController {
               })
               }
           } else {
-            console.log('PASSWORDNYA SALAH')
               next({
                   status: 401,
                   message: 'Email/Password invalid'
