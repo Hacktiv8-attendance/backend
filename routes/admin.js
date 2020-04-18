@@ -13,7 +13,6 @@ aws.config.update({
   accessKeyId: process.env.ACCESS_KEY,
   region: 'ap-southeast-1'
 })
-console.log(process.env.ACCESS_KEY)
 const upload = multer({
   storage: multerS3({
     s3: s3,
