@@ -15,7 +15,6 @@ class EmployeeController {
     .then(response => {
       if (response) {
         if (comparePassword(password, response.password)) {
-          console.log('MASUK RESPONSE COMPARE')
             let payload = {
               id: response.id,
               email: response.email,
