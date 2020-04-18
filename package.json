@@ -6,7 +6,8 @@
   "scripts": {
     "test": "NODE_ENV=test jest",
     "start": "nodemon app.js",
-    "dev": "NODE_ENV=development nodemon app.js"
+    "dev": "NODE_ENV=development nodemon app.js",
+    "reset": "sequelize db:drop && sequelize db:create && sequelize db:migrate && sequelize db:seed:all"
   },
   "repository": {
     "type": "git",

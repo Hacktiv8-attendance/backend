@@ -53,7 +53,8 @@ class EmployeeController {
               in: {
                 [Op.gte]: moment().subtract(1, 'days').toDate()
               }
-            }
+            },
+            include: [Employee]
           })
             .then(response => {
               if(response) {
@@ -69,7 +70,8 @@ class EmployeeController {
                 }, {
                   where: {
                     id: response.id
-                  }
+                  },
+                  returning: true
                 })
                   .then(response => {
                     res.status(200).json({ message: "Absence Updated" })

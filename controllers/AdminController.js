@@ -16,7 +16,8 @@ class AdminController {
                 let payload = {
                   id: response.id,
                   email: response.email,
-                  authLevel: response.authLevel
+                  authLevel: response.authLevel,
+                  name: response.name
                 }
                 let token = getToken(payload)
                 res.status(200).json({
