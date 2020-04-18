@@ -51,7 +51,6 @@ class AdminController {
   static findAll(req, res, next) {
     Employee.findAll()
       .then(response => {
-        response.map(el => delete el.password)
         res.status(200).json(response)
       })
       .catch(next)
@@ -121,6 +120,10 @@ class AdminController {
     }
     const token = getToken(payload)
     res.status(200).json({token})
+  }
+
+  static uploadImage(req, res, next) {
+    res.status(201).json({fileName: req.file})
   }
 }
 
