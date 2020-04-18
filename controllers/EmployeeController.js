@@ -2,6 +2,8 @@ const { Employee, Absence } = require('../models')
 const { Op } = require('sequelize')
 const moment = require('moment')
 const { verify } = require('../helpers/jwt')
+const { comparePassword } = require('../helpers/bcrypt')
+const { getToken } = require('../helpers/jwt')
 class EmployeeController {
   static login(req, res, next) {
     const { email, password } = req.body
@@ -13,6 +15,7 @@ class EmployeeController {
     .then(response => {
       if (response) {
           if (comparePassword(password, response.password)) {
+            delete response.password
             let payload = {
               id: response.id,
               email: response.email,
@@ -21,7 +24,7 @@ class EmployeeController {
             let token = getToken(payload)
             res.status(200).json({
                 token,
-                payload
+                payload: response
             })
           } else {
               next({
@@ -48,14 +51,16 @@ class EmployeeController {
           Absence.findOne({
             where: {
               EmployeeId,
-              [Op.gte]: moment().subtract(1, 'day').toDate()
+              in: {
+                [Op.gte]: moment().subtract(1, 'days').toDate()
+              }
             }
           })
             .then(response => {
               if(response) {
                 let status;
                 const out = new Date()
-                let worktime = moment.duration(out.diff(response.in));
+                let worktime = moment.duration((moment(out)).diff(moment(response.in)));
                 worktime = worktime.hours()
                 worktime >= 9 ? status = true : status = false 
                 Absence.update({
@@ -63,7 +68,9 @@ class EmployeeController {
                   worktime,
                   status
                 }, {
-                  where: response.id
+                  where: {
+                    id: response.id
+                  }
                 })
                   .then(response => {
                     res.status(200).json({ message: "Absence Updated" })
