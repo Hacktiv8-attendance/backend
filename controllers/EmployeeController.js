@@ -3,6 +3,7 @@ const { comparePassword } = require ('../helpers/bcrypt')
 const { Op } = require('sequelize')
 const moment = require('moment')
 const { verify, getToken } = require('../helpers/jwt')
+const { hashPassword } = require('../helpers/bcrypt')
 class EmployeeController {
   static login(req, res, next) {
     const { email, password } = req.body
@@ -207,6 +208,48 @@ class EmployeeController {
         res.status(201).json({ message: "PaidLeave Created"})
       })
       .catch(next)
+    }
+  static resetPassword(req, res, next) {
+    const { email, password } = req.body
+    const passwordHashed = hashPassword(password)
+    Employee
+      .findOne({
+        where: {
+          email
+        }
+      })
+      .then(employee => {
+        if (employee) {
+          return Employee.update({
+            password: passwordHashed
+          }, {
+            where: {
+              id: employee.id
+            }, 
+            returning: true
+          })
+        } else {
+          next({
+            status: 404,
+            message: "Employee not found"
+          })
+        }
+      })
+      .then(response => {
+        if(response) res.status(200).json(response[1][0])
+        else {
+          next({
+            status: 404,
+            message: "Employee not found"
+          })
+        }
+      })
+      .catch(err => {
+        next({
+          status: 404,
+          message: "Employee not found"
+        })
+      })
   }
 }
 
