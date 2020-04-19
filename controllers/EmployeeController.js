@@ -3,6 +3,7 @@ const { comparePassword } = require ('../helpers/bcrypt')
 const { Op } = require('sequelize')
 const moment = require('moment')
 const { verify, getToken } = require('../helpers/jwt')
+const { hashPassword } = require('../helpers/bcrypt')
 class EmployeeController {
   static login(req, res, next) {
     const { email, password } = req.body
