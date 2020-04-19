@@ -7,5 +7,6 @@ router.post('/login', EmployeeController.login)
 router.use(authentication)
 
 router.post('/sendQR', EmployeeController.sendQR)
-
+router.get('/absence/:id', EmployeeController.findAbsence)
+router.get('/staffabsence/:id', EmployeeController.findEmployeeAbsence)
 module.exports = router

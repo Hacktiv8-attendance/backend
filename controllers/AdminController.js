@@ -60,10 +60,10 @@ class AdminController {
 
 
   static addEmployee(req, res, next) {
-    const { name, email, password, birthDate, address, phoneNumber, role, paidLeave, superior, authLevel, image_url} = req.body
+    const { name, email, password, birthDate, address, phoneNumber, role, paidLeave, SuperiorId, authLevel, image_url} = req.body
     const newbirthDate = new Date(birthDate)
     Employee.create({
-      name, email, password, birthDate: newbirthDate, address, phoneNumber, role, paidLeave, superior, authLevel, image_url
+      name, email, password, birthDate: newbirthDate, address, phoneNumber, role, paidLeave, SuperiorId, authLevel, image_url
     })
       .then(response => {
         const payload = {
@@ -76,10 +76,10 @@ class AdminController {
   }
 
   static updateEmployee(req, res, next) {
-    const { name, email, birthDate, address, phoneNumber, role, paidLeave, superior, authLevel, image_url} = req.body
+    const { name, email, birthDate, address, phoneNumber, role, paidLeave, SuperiorId, authLevel, image_url} = req.body
     const password = hashPassword(req.body.password)
     Employee.update({
-      name, email, password, birthDate, address, phoneNumber, role, paidLeave, superior, authLevel, image_url
+      name, email, password, birthDate, address, phoneNumber, role, paidLeave, SuperiorId, authLevel, image_url
     }, {
       where: {
         id: +req.params.id

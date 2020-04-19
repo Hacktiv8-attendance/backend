@@ -1,4 +1,4 @@
-const { Employee, Absence } = require('../models')
+const { Employee, Absence, PaidLeave } = require('../models')
 const { comparePassword } = require ('../helpers/bcrypt')
 const { Op } = require('sequelize')
 const moment = require('moment')
@@ -95,10 +95,117 @@ class EmployeeController {
   static findEmployee(req, res, next) {
     Employee.findAll({
       where: {
-        superior: +req.params.id
+        SuperiorId: +req.params.id
       }
     })
       .then(response => res.status(200).json(response))
+      .catch(next)
+  }
+  static createPaidLeave(req, res, next) {
+    const { SuperiorId, reason, leaveDate, duration } = req.body
+
+    PaidLeave.create({
+      EmployeeId: +req.params.id,
+      SuperiorId,
+      reason,
+      leaveDate,
+      duration
+    })
+      .then((response) => {
+        res.status(201).json({message: "Paid Leave Sent"})
+      })
+      .catch(next)
+  }
+
+  static findAbsence(req, res, next) {
+    Absence.findAll({
+      where: {
+        EmployeeId: +req.params.id
+      },
+      limit: 30
+    })
+      .then(response => {
+        res.status(200).json(response)
+      })
+      .catch(next)
+  }
+
+  static findEmployeeAbsence(req, res, next) {
+    Absence.findAll({
+      include: {
+        model: Employee,
+        where: {
+          SuperiorId: +req.params.id
+        }
+      },
+      limit: 30
+    })
+      .then(response => {
+        res.status(200).json(response)
+      })
+  }
+
+  static findPaidLeave(req, res, next) {
+    PaidLeave.findAll({
+      where: {
+        SuperiorId: +req.params.id
+      }
+    })
+      .then(response => {
+        res.status(200).json(response)
+      })
+      .catch(next)
+  }
+  static updatePaidLeave(req, res, next) {
+    const { status } = req.body
+    PaidLeave.update({
+      status,
+      completed: true
+    }, {
+      where: {
+        id: +req.params.id
+      },
+      returning: true
+    })
+      .then(response => {
+        response = response[1][0]
+        let inTime = moment(response.leaveDate).add(9, 'hours').toISOString()
+        let outTime = moment(inTime).add(9, 'hours').toISOString()
+        const payload = []
+        for(let i = 0; i < 4; i ++) {
+          payload.push({
+            EmployeeId: response.EmployeeId,
+            in: inTime,
+            out: outTime,
+            status: true,
+            worktime: 9
+          })
+          inTime = moment(inTime).add(1, 'day').toISOString()
+          outTime = moment(inTime).add(9, 'hours').toISOString()
+        }
+        if(status) {
+          Absence.bulkCreate(payload)
+            .then(response => {
+              res.status(201).json({ message: "PaidLeave Submitted" })
+            })
+        } else {
+          res.status(200).json({ message: "PaidLeave Rejected" })
+        }
+      })
+      .catch(next)
+  }
+  static requestPaidLeave(req, res, next) {
+    const { SuperiorId, reason, leaveDate, duration } = req.body
+    PaidLeave.create({
+      EmployeeId: +req.params.id,
+      SuperiorId,
+      leaveDate,
+      reason,
+      duration
+    })
+      .then(response => {
+        res.status(201).json({ message: "PaidLeave Created"})
+      })
       .catch(next)
   }
 }
