@@ -120,7 +120,7 @@ module.exports = (sequelize, DataTypes) => {
       // },
       defaultValue: 12
     },
-    superior: {
+    SuperiorId: {
       type: DataTypes.INTEGER,
       // allowNull: false,
       // validate: {
@@ -163,6 +163,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Employee.associate = function(models) {
     Employee.hasMany(models.Absence)
+    Employee.hasOne(models.Employee,  {as: "Superior"})
   };
   
   return Employee;

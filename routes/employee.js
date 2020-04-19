@@ -8,5 +8,6 @@ router.post('/resetPassword',EmployeeController.resetPassword)
 router.use(authentication)
 
 router.post('/sendQR', EmployeeController.sendQR)
-
+router.get('/absence/:id', EmployeeController.findAbsence)
+router.get('/staffabsence/:id', EmployeeController.findEmployeeAbsence)
 module.exports = router

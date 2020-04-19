@@ -34,8 +34,12 @@ module.exports = {
         type: Sequelize.INTEGER,
         defaultValue: 12
       },
-      superior: {
-        type: Sequelize.INTEGER
+      SuperiorId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Employees",
+          key: "id"
+        }
       },
       authLevel: {
         type: Sequelize.INTEGER
