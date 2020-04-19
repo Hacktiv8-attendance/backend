@@ -26,6 +26,7 @@ module.exports = {
       image_url: "https://photos-hrq-upload.s3-ap-southeast-1.amazonaws.com/upload/Andreas+Anggara+Anindyajati.jpg",
       authLevel: 1,
       superior: 1,
+      paidLeave: 12,
       createdAt: new Date(),
       updatedAt: new Date()
     }, {

@@ -1,5 +1,5 @@
 const { Employee } = require('../models')
-const { comparePassword } = require('../helpers/bcrypt')
+const { comparePassword, hashPassword } = require('../helpers/bcrypt')
 const { getToken } = require('../helpers/jwt')
 class AdminController {
   static login(req, res, next) {
@@ -76,8 +76,8 @@ class AdminController {
   }
 
   static updateEmployee(req, res, next) {
-    const { name, email, password, birthDate, address, phoneNumber, role, paidLeave, superior, authLevel, image_url} = req.body
-
+    const { name, email, birthDate, address, phoneNumber, role, paidLeave, superior, authLevel, image_url} = req.body
+    const password = hashPassword(req.body.password)
     Employee.update({
       name, email, password, birthDate, address, phoneNumber, role, paidLeave, superior, authLevel, image_url
     }, {
