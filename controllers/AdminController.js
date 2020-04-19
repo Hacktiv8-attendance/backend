@@ -1,6 +1,9 @@
-const { Employee } = require('../models')
+const { Employee, Absence } = require('../models')
 const { comparePassword, hashPassword } = require('../helpers/bcrypt')
 const { getToken } = require('../helpers/jwt')
+const { Op } = require('sequelize')
+const fs = require('fs')
+const moment = require('moment')
 class AdminController {
   static login(req, res, next) {
     const { email, password } = req.body
@@ -133,6 +136,39 @@ class AdminController {
     }
     const token = getToken(payload)
     res.status(200).json({token})
+  }
+
+  static findAbsencePerMonth(req, res, next) {
+    const { month, SuperiorId } = req.query
+    Absence.findAll({
+      where: {
+        in: {
+          [Op.gte]: moment(month).toDate(),
+          [Op.lte]: moment(month).add(1, 'month').toDate()
+        },
+      },
+      include: [{
+        model: Employee,
+        where: {
+          SuperiorId
+        }
+      }]
+    })
+      .then(response => {
+        const payload = []
+        response.map(el => {
+            const found = payload.findIndex(item => item.label === el.Employee.name)
+            if(found  !== -1) {
+              payload[found]['y'] += 1
+            }
+            else payload.push({
+                label: el.Employee.name,
+                y: 1
+            })
+        })
+        fs.writeFileSync('chart.json', JSON.stringify(response, null, 2), 'utf8')
+        res.status(200).json(payload)
+      })
   }
 
   static uploadImage(req, res, next) {

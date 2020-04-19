@@ -30,6 +30,7 @@ router.post('/upload', upload.single('image'), AdminController.uploadImage)
 router.use(authentication)
 
 router.get('/QR', AdminController.generateQR)
+router.get('/absence', AdminController.findAbsencePerMonth)
 router.get('/employee', AdminController.findAll)
 router.post('/employee', AdminController.addEmployee)
 router.put('/employee/:id', AdminController.updateEmployee)

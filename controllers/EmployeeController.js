@@ -102,28 +102,29 @@ class EmployeeController {
       .then(response => res.status(200).json(response))
       .catch(next)
   }
-  static createPaidLeave(req, res, next) {
+  static requestPaidLeave(req, res, next) {
     const { SuperiorId, reason, leaveDate, duration } = req.body
-
     PaidLeave.create({
-      EmployeeId: +req.params.id,
+      EmployeeId: +req.decoded.id,
       SuperiorId,
-      reason,
       leaveDate,
+      reason,
       duration
     })
-      .then((response) => {
-        res.status(201).json({message: "Paid Leave Sent"})
+      .then(response => {
+        res.status(201).json({ message: "PaidLeave Created"})
       })
       .catch(next)
-  }
+    }
 
   static findAbsence(req, res, next) {
     Absence.findAll({
       where: {
-        EmployeeId: +req.params.id
+        EmployeeId: +req.decoded.id,
+        in: {
+          [Op.gte]: moment().subtract(1, 'month').toDate()
+        }
       },
-      limit: 30
     })
       .then(response => {
         res.status(200).json(response)
@@ -139,7 +140,11 @@ class EmployeeController {
           SuperiorId: +req.params.id
         }
       },
-      limit: 30
+      where: {
+        in: {
+          [Op.gte]: moment().subtract(1, 'month').toDate()
+        }
+      }
     })
       .then(response => {
         res.status(200).json(response)
@@ -195,20 +200,7 @@ class EmployeeController {
       })
       .catch(next)
   }
-  static requestPaidLeave(req, res, next) {
-    const { SuperiorId, reason, leaveDate, duration } = req.body
-    PaidLeave.create({
-      EmployeeId: +req.params.id,
-      SuperiorId,
-      leaveDate,
-      reason,
-      duration
-    })
-      .then(response => {
-        res.status(201).json({ message: "PaidLeave Created"})
-      })
-      .catch(next)
-    }
+  
   static resetPassword(req, res, next) {
     const { email, password } = req.body
     const passwordHashed = hashPassword(password)
