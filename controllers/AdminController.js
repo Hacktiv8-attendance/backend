@@ -166,7 +166,6 @@ class AdminController {
                 y: 1
             })
         })
-        fs.writeFileSync('chart.json', JSON.stringify(response, null, 2), 'utf8')
         res.status(200).json(payload)
       })
   }
