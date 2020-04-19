@@ -3,6 +3,7 @@ const EmployeeController = require('../controllers/EmployeeController')
 const authentication = require('../middlewares/authentication')
 
 router.post('/login', EmployeeController.login)
+router.post('/resetPassword',EmployeeController.resetPassword)
 
 router.use(authentication)
 
