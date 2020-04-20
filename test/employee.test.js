@@ -87,7 +87,6 @@ describe("Employee Routes", () => {
             })
             .then(paidLeave => {
                 paidLeaveId = paidLeave.id
-                console.log(paidLeaveId, 'INI ID PAID LEAVE')
                 // console.log(absence)
                 done()
             })

@@ -90,13 +90,18 @@ class AdminController {
       returning: true
     })
       .then(response => {
+        console.log('MASUK RESPON UPDATE')
+        console.log(response);
+        
         if(response) res.status(200).json(response[1][0])
-        else {
-          next({
-            status: 404,
-            message: "Employee not found"
-          })
-        }
+        // else {
+        //   console.log('INI RESPONNYA')
+        //   console.log(response)
+        //   next({
+        //     status: 404,
+        //     message: "Employee not found"
+        //   })
+        // }
       })
       .catch(err => {
         next({

@@ -47,7 +47,8 @@ describe("Admin Routes", () => {
                 return Employee.create({
                     name: 'Staff Tauladan',
                     email: 'staff@email.com',
-                    password: '123456'
+                    password: '123456',
+                    authLevel: 2
                   })
             })
             .then(employee => {
@@ -149,13 +150,46 @@ describe("Admin Routes", () => {
                 request(server)
                     .post('/admin/login')
                     .send({
-                        email: 'andreas.anggara@emaiom',
-                        password: '12'
+                        email: 'staffy@email.com',
+                        password: '123456'
                     })
                     .end((err, res) => {
                         expect(err).toBe(null)
                         expect(res.status).toBe(401)
                         expect(res.body).toHaveProperty('message', 'Email/Password invalid')
+                        // expect(res.status.message).toContain()
+                        done()
+                    })
+            })
+        })
+
+        describe('Login Employee Error', () => {
+            test('Send wrong form replied with status 401 because user not have access as administrator', (done) => {
+                request(server)
+                    .post('/admin/login')
+                    .send({
+                        email: 'staff@email.com',
+                        password: '123456'
+                    })
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(401)
+                        expect(res.body).toHaveProperty('message', "You're not Administrator")
+                        // expect(res.status.message).toContain()
+                        done()
+                    })
+            })
+        })
+
+        describe('Login Employee Error', () => {
+            test('Send wrong form replied with status 401 because wrong email', (done) => {
+                request(server)
+                    .post('/admin/login')
+                    .send({})
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(500)
+                        // expect(res.body).toHaveProperty('message', "You're not Administrator")
                         // expect(res.status.message).toContain()
                         done()
                     })
@@ -298,9 +332,25 @@ describe("Admin Routes", () => {
         })
 
         describe('Update Employee Error', () => {
-            test('Send object replied with status 404 Internal Server Error', (done) => {
+            test('Send object replied with status 500 Internal Server Error', (done) => {
                 request(server)
-                    .put('/admin/employee/:id')
+                    .put('/admin/employee/uyfiufi')
+                    .set('token', tokenAdmin)
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(404)
+                        expect(res.body).toHaveProperty('message')
+                        expect(res.body.message).toContain('Employee not found')
+                        done()
+                    })
+            })
+        })
+
+
+        describe('Update Employee Error', () => {
+            test('Send object replied with status 404 Line 95', (done) => {
+                request(server)
+                    .put('/admin/employee/189')
                     .set('token', tokenAdmin)
                     .end((err, res) => {
                         expect(err).toBe(null)

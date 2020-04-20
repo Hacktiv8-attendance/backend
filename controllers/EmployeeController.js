@@ -28,14 +28,12 @@ class EmployeeController {
                 payload: response
             })
           } else {
-            console.log('MASUK KESINI')
               next({
                   status: 401,
                   message: 'Email/Password invalid'
               })
           }
       } else {
-        console.log('MASUK KE SATUNYA')
           next({
               status: 401,
               message: 'Email/Password invalid'
@@ -165,9 +163,7 @@ class EmployeeController {
 
   // static findEmployeeAbsence(req, res, next) {
   static findAbsencePerMonth(req, res, next) {
-    console.log("MASUK FIND ABSENCE PER MONTH")
     const { month } = req.query
-    console.log(month)
     Absence.findAll({
       where: {
         in: {
