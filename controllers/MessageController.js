@@ -11,7 +11,8 @@ class MessageController {
   }
   static findAll(req, res, next) {
     Message.findAll({
-      limit: 5
+      limit: 5,
+      order: ['id', 'DESC']
     })
       .then(response => {
         res.status(200).json(response)
