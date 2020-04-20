@@ -137,7 +137,7 @@ class EmployeeController {
       include: {
         model: Employee,
         where: {
-          SuperiorId: +req.params.id
+          SuperiorId: +req.decoded.id
         }
       },
       where: {

@@ -1,7 +1,7 @@
 const AdminController = require('../controllers/AdminController')
+const MessageController = require('../controllers/MessageController')
 const router = require('express').Router()
 const authentication = require('../middlewares/authentication')
-const fs = require('fs')
 const multer = require('multer')
 const aws = require('aws-sdk')
 const multerS3 = require('multer-s3')
@@ -30,7 +30,14 @@ router.post('/upload', upload.single('image'), AdminController.uploadImage)
 router.use(authentication)
 
 router.get('/QR', AdminController.generateQR)
+
+router.post('/message', MessageController.create)
+router.get('/message', MessageController.findAll)
+router.put('/message/:id', MessageController.update)
+router.delete('/message/:id', MessageController.delete)
+
 router.get('/absence', AdminController.findAbsencePerMonth)
+
 router.get('/employee', AdminController.findAll)
 router.post('/employee', AdminController.addEmployee)
 router.put('/employee/:id', AdminController.updateEmployee)

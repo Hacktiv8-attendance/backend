@@ -11,5 +11,6 @@ router.post('/sendQR', EmployeeController.sendQR)
 router.get('/absence', EmployeeController.findAbsence)
 router.post('/paidLeave', EmployeeController.requestPaidLeave)
 router.put('/paidLeave/:id', EmployeeController.updatePaidLeave)
-router.get('/staffabsence/:id', EmployeeController.findEmployeeAbsence)
+
+router.get('/staffabsence', EmployeeController.findEmployeeAbsence)
 module.exports = router

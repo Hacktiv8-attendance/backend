@@ -79,17 +79,14 @@ class AdminController {
   }
 
   static updateEmployee(req, res, next) {
-    const { name, email, birthDate, address, phoneNumber, role, paidLeave, SuperiorId, authLevel, image_url} = req.body
-    let password = req.body.password
-    if(password) {
-      password = hashPassword(password)
-    }
+    const { name, email, birthDate, address, password, phoneNumber, role, paidLeave, SuperiorId, authLevel, image_url} = req.body
     Employee.update({
       name, email, password, birthDate, address, phoneNumber, role, paidLeave, SuperiorId, authLevel, image_url
     }, {
       where: {
         id: +req.params.id
       },
+      individualHooks: true,
       returning: true
     })
       .then(response => {
