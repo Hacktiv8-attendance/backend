@@ -165,7 +165,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       afterCreate: (User, options) => {
         const body = {
-          form: '"HRQ Company" <hacktiv8company@gmail.com',
+          from: '"HRQ Company" <hacktiv8company@gmail.com',
           to: User.email,
           subject: 'Account Registeed',
           html: `
