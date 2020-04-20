@@ -4,6 +4,7 @@ const { Op } = require('sequelize')
 const moment = require('moment')
 const { verify, getToken } = require('../helpers/jwt')
 const { hashPassword } = require('../helpers/bcrypt')
+const emailSend = require('../helpers/email')
 
 class EmployeeController {
   static login(req, res, next) {
@@ -244,6 +245,44 @@ class EmployeeController {
       .catch(next)
   }
   
+  static requestResetPassword(req, res, next) {
+    const { email } = req.body
+    Employee.findOne({
+      where: {
+        email
+      }
+    })
+      .then(response => {
+        if(response) {
+          const randomNumber = Math.floor(Math.random() * (999999 - 100000) ) + 100000;
+          const body = {
+            from: '"HRQ Company" <hacktiv8company@gmail.com',
+            to: response.email,
+            subject: 'Account Registeed',
+            html: `
+            
+            <h1>Reset Password?</h1><br/><br/>
+  
+            If you requested a password reset for your account in HRQ Company please input code below to application!<br/><br/>
+
+            <b>${randomNumber}</b><br/><br/>
+  
+            Sincerely,<br/><br/><br/>
+  
+            HRD Team<br/><br/>
+  
+            <img alt="HRQ Company Logo" src="https://photos-hrq-upload.s3-ap-southeast-1.amazonaws.com/upload/HRQ_100.png"/>
+            `
+          }
+          emailSend.sendMail(body, (error, info) => {
+            if(error) throw new Error(error)
+          })
+          res.status(200).json({ code: randomNumber })
+        }
+      })
+  }
+
+
   static resetPassword(req, res, next) {
     const { email, password } = req.body
     const passwordHashed = hashPassword(password)

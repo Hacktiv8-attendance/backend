@@ -5,7 +5,7 @@ const employee = [
   {
     name: "Abdul Basith K",
     password: hashPassword('abdul123'),
-    email: 'abdul.basith@gmail.com',
+    email: 'abdulbasithkamaludin@gmail.com',
     birthDate: new Date("1997-01-21"),
     address: 'Depok',
     phoneNumber: '0812121212',

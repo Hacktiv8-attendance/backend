@@ -6,6 +6,7 @@ const authentication = require('../middlewares/authentication')
 
 router.post('/login', EmployeeController.login)
 router.post('/findEmail', EmployeeController.findOne)
+router.post('/requestCode', EmployeeController.requestResetPassword)
 router.post('/resetPassword',EmployeeController.resetPassword)
 
 

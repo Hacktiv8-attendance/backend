@@ -1,15 +1,15 @@
 {
   "development": {
-    "username": "postgres",
-    "password": "postgres",
+    "username": "user",
+    "password": "user",
     "database": "HRQ_development",
     "host": "localhost",
     "dialect": "postgres",
     "logging": false
   },
   "test": {
-    "username": "postgres",
-    "password": "postgres",
+    "username": "user",
+    "password": "user",
     "database": "HRQ_test",
     "host": "localhost",
     "dialect": "postgres",

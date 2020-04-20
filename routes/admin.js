@@ -31,8 +31,8 @@ router.use(authentication)
 
 router.get('/QR', AdminController.generateQR)
 
-router.post('/message', MessageController.create)
 router.get('/message', MessageController.findAll)
+router.post('/message', MessageController.create)
 router.put('/message/:id', MessageController.update)
 router.delete('/message/:id', MessageController.delete)
 
