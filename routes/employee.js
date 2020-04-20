@@ -18,5 +18,5 @@ router.get('/absence', EmployeeController.findAbsence)
 router.post('/paidLeave', EmployeeController.requestPaidLeave)
 router.put('/paidLeave/:id', EmployeeController.updatePaidLeave)
 
-router.get('/staffabsence', EmployeeController.findEmployeeAbsence)
+router.get('/staffabsence', EmployeeController.findAbsencePerMonth)
 module.exports = router
