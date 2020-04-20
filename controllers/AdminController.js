@@ -30,7 +30,7 @@ class AdminController {
               } else {
                 next({
                   status: 401,
-                  message: 'Email/Password invalid'
+                  message: "You're not Administrator"
               })
               }
           } else {

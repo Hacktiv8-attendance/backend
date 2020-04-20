@@ -6,7 +6,20 @@ module.exports = (sequelize, DataTypes) => {
   PaidLeave.init({
     EmployeeId: DataTypes.INTEGER,
     SuperiorId: DataTypes.INTEGER,
-    reason: DataTypes.STRING,
+    reason: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: 'Reason is Required'
+        },
+        notEmpty: {
+          args: true,
+          msg: "Reason is Required"
+        }
+      }
+    },
     status: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
@@ -16,10 +29,32 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: false
     },
     leaveDate: {
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: 'Leave Date is Required'
+        },
+        notEmpty: {
+          args: true,
+          msg: "Leave Date is Required"
+        }
+      }
     },
     duration: {
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: 'Duration is Required'
+        },
+        notEmpty: {
+          args: true,
+          msg: "Duration is Required"
+        }
+      }
     }
   }, {
     sequelize
