@@ -80,28 +80,31 @@ class AdminController {
 
   static updateEmployee(req, res, next) {
     const { name, email, birthDate, address, password, phoneNumber, role, paidLeave, SuperiorId, authLevel, image_url} = req.body
-    Employee.update({
-      name, email, password, birthDate, address, phoneNumber, role, paidLeave, SuperiorId, authLevel, image_url
-    }, {
+    Employee.findOne({
       where: {
         id: +req.params.id
-      },
-      individualHooks: true,
-      returning: true
+      }
     })
       .then(response => {
-        console.log('MASUK RESPON UPDATE')
-        console.log(response);
-        
-        if(response) res.status(200).json(response[1][0])
-        // else {
-        //   console.log('INI RESPONNYA')
-        //   console.log(response)
-        //   next({
-        //     status: 404,
-        //     message: "Employee not found"
-        //   })
-        // }
+        if(response) {
+          Employee.update({
+            name, email, password, birthDate, address, phoneNumber, role, paidLeave, SuperiorId, authLevel, image_url
+          }, {
+            where: {
+              id: +req.params.id
+            },
+            individualHooks: true,
+            returning: true
+          })
+          .then(response => {
+            res.status(200).json(response[1][0])
+          })
+        } else {
+          next({
+            status: 404,
+            message: "Employee not found"
+          })
+        }
       })
       .catch(err => {
         next({
@@ -126,8 +129,15 @@ class AdminController {
               id: +req.params.id
             }
           })
+          .then(response => {
+            if(payload) res.status(200).json(payload)
+            else res.status(404).json({message: "Employee Not Found"})
+          })
+        } else {
+          res.status(404).json({message: "Employee Not Found"})
         }
       })
+<<<<<<< HEAD
       .then(response => {
         // console.log('MASUK DELETE SINI WEY')
         // console.log(response)
@@ -137,6 +147,8 @@ class AdminController {
         //   res.status(404).json({message: "Employee Not Found"})
         // }
       })
+=======
+>>>>>>> ecbdf136e5ecf25f1e1e78978c41f51672b80dc1
       .catch(next)
   }
 

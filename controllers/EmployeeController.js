@@ -161,7 +161,6 @@ class EmployeeController {
       })
   }
 
-  // static findEmployeeAbsence(req, res, next) {
   static findAbsencePerMonth(req, res, next) {
     const { month } = req.query
     Absence.findAll({
