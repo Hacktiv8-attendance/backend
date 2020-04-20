@@ -168,25 +168,26 @@ module.exports = (sequelize, DataTypes) => {
           form: '"HRQ Company" <hacktiv8company@gmail.com',
           to: User.email,
           subject: 'Account Registeed',
-          text: `
+          html: `
           
-            Dear Mr/Mrs ${User.name},
-            ${User.address}
+          Dear Mr/Mrs <b>${User.name}</b>,<br/>
+          ${User.address}<br/><br/>
 
-            I am writing to inform you that you have been accepted to work for our company as our ${User.role}.
+          I am writing to inform you that you have been accepted to work for our company as our ${User.role}.<br/>
+          We expect to see you in the office. We would like to discuss your post and the duties that come with it. We will also answer any questions you may have then.<br/><br/>
 
-            We expect to see you in the office. We would like to discuss your post and the duties that come with it. We will also answer any questions you may have then.
+          Congratulations on getting the post, and we look forward to working with you soon.<br/><br/>
 
-            Congratulations on getting the post, and we look forward to working with you soon.
+          Here Your Account Credentials:<br/><br/>
 
-            Here Your Account Credentials:
+          Email: ${User.email}<br/><br/>
+          Password: ${passwordAfter}<br/>
 
-            Email: ${User.email}
-            Password: ${passwordAfter}
+          Sincerely,<br/><br/><br/>
 
-            Sincerely,
+          HRD Team<br/><br/>
 
-            HRD Team
+          <img alt="HRQ Company Logo" src="https://photos-hrq-upload.s3-ap-southeast-1.amazonaws.com/upload/HRQ_100.png"/>
           `
         }
         email.sendMail(body, (error, info) => {
