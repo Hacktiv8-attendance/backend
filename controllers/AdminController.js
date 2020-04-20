@@ -80,7 +80,10 @@ class AdminController {
 
   static updateEmployee(req, res, next) {
     const { name, email, birthDate, address, phoneNumber, role, paidLeave, SuperiorId, authLevel, image_url} = req.body
-    const password = hashPassword(req.body.password)
+    let password = req.body.password
+    if(password) {
+      password = hashPassword(password)
+    }
     Employee.update({
       name, email, password, birthDate, address, phoneNumber, role, paidLeave, SuperiorId, authLevel, image_url
     }, {
@@ -99,6 +102,7 @@ class AdminController {
         }
       })
       .catch(err => {
+        console.log('masuk Error')
         next({
           status: 404,
           message: "Employee not found"
