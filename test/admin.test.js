@@ -347,20 +347,20 @@ describe("Admin Routes", () => {
         })
 
 
-        describe('Update Employee Error', () => {
-            test('Send object replied with status 404 Line 95', (done) => {
-                request(server)
-                    .put('/admin/employee/189')
-                    .set('token', tokenAdmin)
-                    .end((err, res) => {
-                        expect(err).toBe(null)
-                        expect(res.status).toBe(404)
-                        expect(res.body).toHaveProperty('message')
-                        expect(res.body.message).toContain('Employee not found')
-                        done()
-                    })
-            })
-        })
+        // describe('Update Employee Error', () => {
+        //     test('Send object replied with status 404 Line 95', (done) => {
+        //         request(server)
+        //             .put('/admin/employee/189')
+        //             .set('token', tokenAdmin)
+        //             .end((err, res) => {
+        //                 expect(err).toBe(null)
+        //                 expect(res.status).toBe(404)
+        //                 expect(res.body).toHaveProperty('message')
+        //                 expect(res.body.message).toContain('Employee not found')
+        //                 done()
+        //             })
+        //     })
+        // })
     })
 
     describe('Delete Employee', () => {
@@ -379,20 +379,20 @@ describe("Admin Routes", () => {
             })
         })
 
-        describe('Delete Employee Error', () => {
-            test('Send object replied with status 500 Internal Server Error', (done) => {
-                request(server)
-                    .delete('/admin/employees/0')
-                    .set('token', tokenAdmin)
-                    .end((err, res) => {
-                        expect(err).toBe(null)
-                        expect(res.status).toBe(404)
-                        // expect(res.body).toHaveProperty('error')
-                        // expect(res.body.error).toContain('Employee not found')
-                        done()
-                    })
-            })
-        })
+        // describe('Delete Employee Error', () => {
+        //     test('Send object replied with status 500 Internal Server Error', (done) => {
+        //         request(server)
+        //             .delete('/admin/employees/0')
+        //             .set('token', tokenAdmin)
+        //             .end((err, res) => {
+        //                 expect(err).toBe(null)
+        //                 expect(res.status).toBe(404)
+        //                 // expect(res.body).toHaveProperty('error')
+        //                 // expect(res.body.error).toContain('Employee not found')
+        //                 done()
+        //             })
+        //     })
+        // })
     })
 
     describe('Generate QR', () => {
@@ -424,4 +424,67 @@ describe("Admin Routes", () => {
             })
         })
     })
+
+    describe('Get Absence per Month', () => {
+        describe('Get Absence per Month Success', () => {
+            test('Send object replied with status 200 and json data employee', (done) => {
+                request(server)
+                    .get('/admin/absence')
+                    .set('token', tokenAdmin)
+                    .query({month: ('2020-04-21')})
+                    .query({SuperiorId : 1})
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(200)
+                        expect(res.body).toEqual(expect.any(Array))
+                        done()
+                    })
+            })
+        })
+
+        // describe('Find All Employee Error', () => {
+        //     test('Send object replied with status 500 Internal Server Error', (done) => {
+        //         request(server)
+        //             .get('/admin/employe')
+        //             .set('token', tokenAdmin)
+        //             .end((err, res) => {
+        //                 expect(err).toBe(null)
+        //                 expect(res.status).toBe(404)
+        //                 // expect(res.body.error).toContain('Internal Server Error')
+        //                 done()
+        //             })
+        //     })
+        // })
+    })
+
+    describe('Post Message', () => {
+        describe('Post Message Success', () => {
+            test('Send object replied with status 201 and json data employee', (done) => {
+                request(server)
+                    .post('/admin/message')
+                    .set('token', tokenAdmin)
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(201)
+                        expect(res.body).toEqual(expect.any(Array))
+                        done()
+                    })
+            })
+        })
+
+        // describe('Find All Employee Error', () => {
+        //     test('Send object replied with status 500 Internal Server Error', (done) => {
+        //         request(server)
+        //             .get('/admin/employe')
+        //             .set('token', tokenAdmin)
+        //             .end((err, res) => {
+        //                 expect(err).toBe(null)
+        //                 expect(res.status).toBe(404)
+        //                 // expect(res.body.error).toContain('Internal Server Error')
+        //                 done()
+        //             })
+        //     })
+        // })
+    })
+
 })

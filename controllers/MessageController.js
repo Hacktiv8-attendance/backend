@@ -5,6 +5,7 @@ class MessageController {
     const { message } = req.body
     Message.create({message})
       .then(response => {
+        console.log(response)
         res.status(201).json(response)
       })
       .catch(next)

@@ -129,8 +129,13 @@ class AdminController {
         }
       })
       .then(response => {
+        // console.log('MASUK DELETE SINI WEY')
+        // console.log(response)
         if(payload) res.status(200).json(payload)
-        else res.status(404).json({message: "Employee Not Found"})
+        // else {
+        //   console.log('MASUK DELETE SINI WEY')
+        //   res.status(404).json({message: "Employee Not Found"})
+        // }
       })
       .catch(next)
   }
@@ -161,16 +166,16 @@ class AdminController {
     })
       .then(response => {
         const payload = []
-        response.map(el => {
-            const found = payload.findIndex(item => item.label === el.Employee.name)
-            if(found  !== -1) {
-              payload[found]['y'] += 1
-            }
-            else payload.push({
-                label: el.Employee.name,
-                y: 1
-            })
-        })
+        // response.map(el => {
+        //     const found = payload.findIndex(item => item.label === el.Employee.name)
+        //     if(found  !== -1) {
+        //       payload[found]['y'] += 1
+        //     }
+        //     else payload.push({
+        //         label: el.Employee.name,
+        //         y: 1
+        //     })
+        // })
         res.status(200).json(payload)
       })
   }

@@ -180,31 +180,31 @@ class EmployeeController {
     })
       .then(response => {
         const payload = []
-        response.map(el => {
-            const found = payload.findIndex(item => item.label === el.Employee.name)
-            if(found  !== -1) {
-              payload[found]['y'] += 1
-            }
-            else payload.push({
-                label: el.Employee.name,
-                y: 1
-            })
-        })
+        // response.map(el => {
+        //     const found = payload.findIndex(item => item.label === el.Employee.name)
+        //     if(found  !== -1) {
+        //       payload[found]['y'] += 1
+        //     }
+        //     else payload.push({
+        //         label: el.Employee.name,
+        //         y: 1
+        //     })
+        // })
         res.status(200).json(payload)
       })
   }
 
-  // static findPaidLeave(req, res, next) {
-  //   PaidLeave.findAll({
-  //     where: {
-  //       SuperiorId: +req.params.id
-  //     }
-  //   })
-  //     .then(response => {
-  //       res.status(200).json(response)
-  //     })
-  //     .catch(next)
-  // }
+  static findPaidLeave(req, res, next) {
+    PaidLeave.findAll({
+      where: {
+        SuperiorId: +req.params.id
+      }
+    })
+      .then(response => {
+        res.status(200).json(response)
+      })
+      .catch(next)
+  }
 
   static updatePaidLeave(req, res, next) {
     const { status } = req.body
