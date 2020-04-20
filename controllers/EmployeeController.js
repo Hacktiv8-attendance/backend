@@ -167,7 +167,8 @@ class EmployeeController {
   static findPaidLeave(req, res, next) {
     PaidLeave.findAll({
       where: {
-        SuperiorId: +req.params.id
+        SuperiorId: +req.decoded.id,
+        completed: false
       }
     })
       .then(response => {
