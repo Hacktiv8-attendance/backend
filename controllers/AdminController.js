@@ -137,18 +137,6 @@ class AdminController {
           res.status(404).json({message: "Employee Not Found"})
         }
       })
-<<<<<<< HEAD
-      .then(response => {
-        // console.log('MASUK DELETE SINI WEY')
-        // console.log(response)
-        if(payload) res.status(200).json(payload)
-        // else {
-        //   console.log('MASUK DELETE SINI WEY')
-        //   res.status(404).json({message: "Employee Not Found"})
-        // }
-      })
-=======
->>>>>>> ecbdf136e5ecf25f1e1e78978c41f51672b80dc1
       .catch(next)
   }
 
