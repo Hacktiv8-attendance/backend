@@ -132,22 +132,35 @@ class EmployeeController {
       .catch(next)
   }
 
-  static findEmployeeAbsence(req, res, next) {
+  static findAbsencePerMonth(req, res, next) {
+    const { month } = req.query
     Absence.findAll({
-      include: {
-        model: Employee,
-        where: {
-          SuperiorId: +req.decoded.id
-        }
-      },
       where: {
         in: {
-          [Op.gte]: moment().subtract(1, 'month').toDate()
+          [Op.gte]: moment(month).toDate(),
+          [Op.lte]: moment(month).add(1, 'month').toDate()
+        },
+      },
+      include: [{
+        model: Employee,
+        where: {
+          SuperiorId: req.decoded.id
         }
-      }
+      }]
     })
       .then(response => {
-        res.status(200).json(response)
+        const payload = []
+        response.map(el => {
+            const found = payload.findIndex(item => item.label === el.Employee.name)
+            if(found  !== -1) {
+              payload[found]['y'] += 1
+            }
+            else payload.push({
+                label: el.Employee.name,
+                y: 1
+            })
+        })
+        res.status(200).json(payload)
       })
   }
 
