@@ -129,13 +129,12 @@ class AdminController {
               id: +req.params.id
             }
           })
-          .then(response => {
-            if(payload) res.status(200).json(payload)
-            else res.status(404).json({message: "Employee Not Found"})
-          })
         } else {
           res.status(404).json({message: "Employee Not Found"})
         }
+      })
+      .then(response => {
+          res.status(200).json(payload)
       })
       .catch(next)
   }

@@ -252,6 +252,24 @@ describe("Employee Routes", () => {
         })
     })
 
+    describe('Find Paid Leave Create and Update', () => {
+        describe('Find Paid Leave Success', () => {
+            test('Send object replied with status 200 and array of employee', (done) => {
+                request(server)
+                    .get('/employee/paidLeave/1')
+                    .set('token', tokenUser)
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(200)
+                        // expect(res.body).toHaveProperty('message')
+                        // expect(res.body.message).toEqual("PaidLeave Created")
+                        done()
+                    })
+            })
+        })
+
+    })
+
     describe('Paid Leave Create and Update', () => {
         describe('Paid Leave Created Success', () => {
             test('Send object replied with status 201 and array of employee', (done) => {

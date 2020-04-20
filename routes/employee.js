@@ -17,7 +17,7 @@ router.post('/sendQR', EmployeeController.sendQR)
 
 router.get('/absence', EmployeeController.findAbsence)
 
-router.get('/paidLeave', EmployeeController.findPaidLeave)
+router.get('/paidLeave/:id', EmployeeController.findPaidLeave)
 router.post('/paidLeave', EmployeeController.requestPaidLeave)
 router.put('/paidLeave/:id', EmployeeController.updatePaidLeave)
 

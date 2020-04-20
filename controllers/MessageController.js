@@ -5,7 +5,6 @@ class MessageController {
     const { message } = req.body
     Message.create({message})
       .then(response => {
-        console.log(response)
         res.status(201).json(response)
       })
       .catch(next)
@@ -22,27 +21,50 @@ class MessageController {
   }
   static update(req, res, next) {
     const { message } = req.body
-    Message.update({message}, {
-      where: {
-        id: +req.params.id
-      },
-      returning: true
-    })
+    console.log(message)
+    Message
+      .findOne({
+        where: {
+          id: req.params.id
+        }
+      })
+      .then(messageEmployee => {
+        if(messageEmployee) {
+          return Message.update({message}, {
+            where: {
+              id: req.params.id
+            },
+            returning: true
+          })
+        } else {
+          next({ status: 404, message: "Message Not Found" })
+        }
+      })
       .then(response => {
         if(response) res.status(200).json(response[1][0])
-        else next({ status: 404, message: "Message Not Found" })
       })
       .catch(next)
   }
   static delete(req, res, next) {
-    Message.destroy({
-      where: {
-        id: +req.params.id
-      }
-    })
+    Message
+      .findOne({
+        where: {
+          id: req.params.id
+        }
+      })
+      .then (message => {
+        if(message) {
+          return Message.destroy({
+            where: {
+              id: +req.params.id
+            }
+          })
+        } else {
+          next({ status: 404, message: "Message Not Found" })
+        }
+      })
     .then(response => {
-      if(response) res.status(200).json({message: "Message Deleted"})
-      else next({ status: 404, message: "Message Not Found" })
+        res.status(200).json({message: "Message Deleted"})
     })
     .catch(next)
   }
