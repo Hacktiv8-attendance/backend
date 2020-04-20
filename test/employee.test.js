@@ -16,7 +16,7 @@ const registerForm = {
     address: 'Bogor',
     phoneNumber: '123124124',
     role: 'Staff',
-    SuperiorId: 1,
+    // SuperiorId: 1,
     authLevel: 3
 }
 const registerFormTwo = {
@@ -27,7 +27,7 @@ const registerFormTwo = {
     address: 'Bogor',
     phoneNumber: '123124124',
     role: 'Staff',
-    SuperiorId: 1,
+    // SuperiorId: 1,
     authLevel: 3
 }
 
@@ -91,6 +91,9 @@ describe("Employee Routes", () => {
                 // console.log(absence)
                 done()
             })
+            // .then(employee => {
+            //     done()
+            // })
             .catch(err => done(err))
     })
     afterAll((done) => {
@@ -106,8 +109,6 @@ describe("Employee Routes", () => {
           .catch(err => done(err))
     })
     // afterEach(() => app.close());
-
-// LOGIN =============================================================================s
 
     describe('Login Employee', () => {
         describe('Login Success', () => {
@@ -166,8 +167,6 @@ describe("Employee Routes", () => {
         })
     })
 
-// SEND QR =============================================================================s
-
     describe('Send QR Employee', () => {
         describe('Send QR for create absence success', () => {
             test('Send object replied with status 201 and message', (done) => {
@@ -224,9 +223,6 @@ describe("Employee Routes", () => {
         })
     })
 
-// ABSENCE GET=============================================================================s
-// harus ada token
-
     describe('Absence Employee', () => {
         describe('Absence Employee Success', () => {
             test('Send object replied with status 200 and array of employee', (done) => {
@@ -257,9 +253,7 @@ describe("Employee Routes", () => {
         })
     })
 
-// PAID LEAVE  POST=============================================================================s
-
-    describe('Paid Leave', () => {
+    describe('Paid Leave Create and Update', () => {
         describe('Paid Leave Created Success', () => {
             test('Send object replied with status 201 and array of employee', (done) => {
                 request(server)
@@ -358,14 +352,11 @@ describe("Employee Routes", () => {
 
     })
 
-// STAFF ABSENCE ID GET =============================================================================s
-
-
-    describe('Paid Leave', () => {
-        describe('Paid Leave Created Success', () => {
+    describe('Staff Find Absence', () => {
+        describe('Staff absence success', () => {
             test('Send object replied with status 200 and array of employee', (done) => {
                 request(server)
-                    .get('/employee/staffabsence/' + 1 )
+                    .get('/employee/absence')
                     .set('token', tokenUser)
                     .end((err, res) => {
                         expect(err).toBe(null)
@@ -382,62 +373,126 @@ describe("Employee Routes", () => {
 
     })
 
-
-// FIND ALL EMPLOYEE =============================================================================s
-
-    describe('Find All Employee', () => {
-        describe('Find All Employee Success', () => {
+    describe('Find Email Employee', () => {
+        describe('Find Email Employee Success', () => {
             test('Send object replied with status 200 and array of employee', (done) => {
                 request(server)
-                    .get('/employee/staffabsence/' + 1 )
-                    .set('token', tokenUser)
+                    .post('/employee/findEmail')
+                    .send({
+                        email: 'mail@mail.com'
+                    })
                     .end((err, res) => {
                         expect(err).toBe(null)
                         expect(res.status).toBe(200)
-                        expect(res.body).toEqual(expect.any(Array))
+                        // expect(res.body).toHaveProperty('nama')
+                        // expect(res.body).toHaveProperty("SuperiorId")
+                        done()
+                    })
+            })
+        })
+
+        describe('Find Email Employee Failed', () => {
+            test('Send object replied with status 404 and error message', (done) => {
+                request(server)
+                    .post('/employee/findEmail')
+                    .send({
+                        email: 'mail@mail.co'
+                    })
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(404)
+                        expect(res.body).toHaveProperty("message", "Employee not found")
+                        done()
+                    })
+            })
+        })
+
+        describe('Find Email Employee Failed', () => {
+            test('Send object replied with status 404 and error message', (done) => {
+                request(server)
+                    .post('/employee/findEmail')
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(404)
+                        expect(res.body).toHaveProperty("message", "Employee not found")
                         done()
                     })
             })
         })
     })
 
-// FIND EMAIL EMPLOYEE =============================================================================s
+    describe('Find Staff Absence per Month', () => {
+        describe('Find Staff Absence Success', () => {
+            test('Replied with status 200', (done) => {
+                request(server)
+                    .get('/employee/staffabsence')
+                    .set('token', tokenUser)
+                    .query({ month: '2020-04-20'})
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(200)
+                        expect(res.body).toEqual(expect.any(Object))
+                        // expect(res.body).toHaveProperty("SuperiorId")
+                        done()
+                    })
+            })
+        })
+    })
 
-    // describe('Find Email Employee', () => {
-    //     describe('Find Email Employee Success', () => {
-    //         test('Send object replied with status 200 and array of employee', (done) => {
-    //             request(server)
-    //                 .post('/employee/findEmail')
-    //                 .send({
-    //                     email: 'mail@mail.com'
-    //                 })
-    //                 .end((err, res) => {
-    //                     expect(err).toBe(null)
-    //                     expect(res.status).toBe(200)
-    //                     // expect(res.body).toHaveProperty('nama')
-    //                     // expect(res.body).toHaveProperty("SuperiorId")
-    //                     done()
-    //                 })
-    //         })
-    //     })
+    describe('Reset Password Employee', () => {
+        describe('Reset Password Success', () => {
+            test('Replied with status 200', (done) => {
+                request(server)
+                    .post('/employee/resetPassword')
+                    .send({
+                        email: 'mail@mail.com',
+                        password: '1234567890'
+                    })
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(200)
+                        expect(res.body).toEqual(expect.any(Object))
+                        // expect(res.body).toHaveProperty("SuperiorId")
+                        done()
+                    })
+            })
+        })
 
-    //     describe('Find Email Employee Failed', () => {
-    //         test('Send object replied with status 404 and error message', (done) => {
-    //             request(server)
-    //                 .post('/employee/findEmail')
-    //                 .send({
-    //                     email: 'mail@mail.com'
-    //                 })
-    //                 .end((err, res) => {
-    //                     expect(err).toBe(null)
-    //                     expect(res.status).toBe(404)
-    //                     // expect(res.body).toHaveProperty("SuperiorId")
-    //                     done()
-    //                 })
-    //         })
-    //     })
-    // })
+        describe('Reset Password Error because wrong email', () => {
+            test('Replied with status 200', (done) => {
+                request(server)
+                    .post('/employee/resetPassword')
+                    .send({
+                        email: 'mail@gmail.com',
+                        password: '1234567890'
+                    })
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(404)
+                        expect(res.body).toHaveProperty("message", "Employee not found")
+                        // expect(res.body).toHaveProperty("SuperiorId")
+                        done()
+                    })
+            })
+        })
 
-
+        describe('Reset Password Error because wrong email', () => {
+            test('Replied with status 200', (done) => {
+                request(server)
+                    .post('/employee/resetPassword')
+                    .send({
+                        email: '',
+                        password: ''
+                    })
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(404)
+                        expect(res.body).toHaveProperty("message", "Employee not found")
+                        // expect(res.body).toHaveProperty("SuperiorId")
+                        done()
+                    })
+            })
+        })
+    })
 })
 

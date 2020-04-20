@@ -165,7 +165,9 @@ class EmployeeController {
 
   // static findEmployeeAbsence(req, res, next) {
   static findAbsencePerMonth(req, res, next) {
+    console.log("MASUK FIND ABSENCE PER MONTH")
     const { month } = req.query
+    console.log(month)
     Absence.findAll({
       where: {
         in: {
@@ -194,19 +196,20 @@ class EmployeeController {
         })
         res.status(200).json(payload)
       })
-  }
-
-  static findPaidLeave(req, res, next) {
-    PaidLeave.findAll({
-      where: {
-        SuperiorId: +req.params.id
-      }
-    })
-      .then(response => {
-        res.status(200).json(response)
-      })
       .catch(next)
   }
+
+  // static findPaidLeave(req, res, next) {
+  //   PaidLeave.findAll({
+  //     where: {
+  //       SuperiorId: +req.params.id
+  //     }
+  //   })
+  //     .then(response => {
+  //       res.status(200).json(response)
+  //     })
+  //     .catch(next)
+  // }
 
   static updatePaidLeave(req, res, next) {
     const { status } = req.body
@@ -282,12 +285,7 @@ class EmployeeController {
           })
         }
       })
-      .catch(err => {
-        next({
-          status: 404,
-          message: "Employee not found"
-        })
-      })
+      .catch(next)
     }
 }
 
