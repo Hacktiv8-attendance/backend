@@ -3,7 +3,7 @@ const { Message } = require('../models')
 class MessageController {
   static create(req, res, next) {
     const { message } = req.body
-    Message.create()
+    Message.create({message})
       .then(response => {
         res.status(201).json(response)
       })
