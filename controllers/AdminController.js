@@ -102,7 +102,6 @@ class AdminController {
         }
       })
       .catch(err => {
-        console.log('masuk Error')
         next({
           status: 404,
           message: "Employee not found"

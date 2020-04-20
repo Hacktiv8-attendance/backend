@@ -7,7 +7,6 @@ const { hashPassword } = require('../helpers/bcrypt')
 
 class EmployeeController {
   static login(req, res, next) {
-    console.log('MASUK LOGIN')
     const { email, password } = req.body
     Employee.findOne({
       where: {
@@ -29,12 +28,14 @@ class EmployeeController {
                 payload: response
             })
           } else {
+            console.log('MASUK KESINI')
               next({
                   status: 401,
                   message: 'Email/Password invalid'
               })
           }
       } else {
+        console.log('MASUK KE SATUNYA')
           next({
               status: 401,
               message: 'Email/Password invalid'
@@ -95,15 +96,17 @@ class EmployeeController {
     }
   }
 
-  static findEmployee(req, res, next) {
-    Employee.findAll({
-      where: {
-        SuperiorId: +req.params.id
-      }
-    })
-      .then(response => res.status(200).json(response))
-      .catch(next)
-  }
+  // static findEmployee(req, res, next) {
+  //   Employee.findAll({
+  //     where: {
+  //       SuperiorId: +req.params.id
+  //     }
+  //   })
+  //     .then(response => res.status(200).json(response))
+  //     .catch(next)
+  // }
+
+
   static requestPaidLeave(req, res, next) {
     const { SuperiorId, reason, leaveDate, duration } = req.body
     PaidLeave.create({
@@ -190,6 +193,7 @@ class EmployeeController {
       })
       .catch(next)
   }
+
   static updatePaidLeave(req, res, next) {
     const { status } = req.body
     PaidLeave.update({

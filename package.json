@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "NODE_ENV=test jest --runInBand --detectOpenHandles",
+    "test": "NODE_ENV=test jest --coverage --runInBand --detectOpenHandles",
     "dev": "NODE_ENV=development nodemon bin/http.js",
     "devwin": "SET NODE_ENV=development&& nodemon bin/http.js",
     "reset": "sequelize db:drop && sequelize db:create && sequelize db:migrate && sequelize db:seed:all"
@@ -21,6 +21,7 @@
   "homepage": "https://github.com/Hacktiv8-attendance/backend#readme",
   "dependencies": {
     "aws-sdk": "^2.658.0",
+    "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
