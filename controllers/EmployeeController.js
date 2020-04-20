@@ -4,8 +4,10 @@ const { Op } = require('sequelize')
 const moment = require('moment')
 const { verify, getToken } = require('../helpers/jwt')
 const { hashPassword } = require('../helpers/bcrypt')
+
 class EmployeeController {
   static login(req, res, next) {
+    console.log('MASUK LOGIN')
     const { email, password } = req.body
     Employee.findOne({
       where: {
@@ -103,6 +105,32 @@ class EmployeeController {
       .catch(next)
   }
 
+  static findOne (req, res, next) {
+    const { email } = req.body
+    Employee
+      .findOne({
+        where: {
+          email
+        }
+      })
+      .then(employee => {
+        if (employee) {
+          res.status(200).json(employee)
+        } else {
+          next({
+              status: 404,
+              message: "Employee not found"
+          })
+        }
+      })
+      .catch( err => {
+          next({
+            status: 404,
+            message: "Employee not found"
+          })
+      })
+  }
+
   static resetPassword(req, res, next) {
     const { email, password } = req.body
     const passwordHashed = hashPassword(password)
@@ -144,7 +172,7 @@ class EmployeeController {
           message: "Employee not found"
         })
       })
-  }
+    }
 }
 
 module.exports = EmployeeController
