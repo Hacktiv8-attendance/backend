@@ -1,5 +1,5 @@
 const request = require('supertest');
-// const server = require('../server');
+const app = require('../app');
 const server = require('../bin/http')
 const { Employee } = require('../models')
 const { getToken } = require('../helpers/jwt')
@@ -47,7 +47,8 @@ describe("Admin Routes", () => {
                 return Employee.create({
                     name: 'Staff Tauladan',
                     email: 'staff@email.com',
-                    password: '123456'
+                    password: '123456',
+                    authLevel: 2
                   })
             })
             .then(employee => {
@@ -102,69 +103,100 @@ describe("Admin Routes", () => {
             })
             .catch(err => done(err))
     })
+    // afterEach(() => app.close());
 
-// LOGIN =============================================================================s
+    describe('Login Admin', () => {
+        describe('Login Success', () => {
+            test('Send object replied with status 200 and token', (done) => {
+                request(server)
+                    .post('/admin/login')
+                    .send({
+                        email: 'andreas.anggara@email.com',
+                        password: 'admin123'
+                    })
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(200)
+                        expect(res.body).toHaveProperty('token', expect.any(String))
+                        expect(res.body).toHaveProperty('payload')
+                        expect(res.body.payload).toHaveProperty('id')
+                        expect(res.body.payload).toHaveProperty('email')
+                        expect(res.body.payload).toHaveProperty('authLevel')
+                        done()
+                    })
+            })
+        })
+        
+        describe('Login Admin Error', () => {
+            test('Send wrong form replied with status 401 because wrong password or wrong email', (done) => {
+                request(server)
+                    .post('/admin/login')
+                    .send({
+                        email: 'andreas.anggara@email.com',
+                        password: '12'
+                    })
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(401)
+                        expect(res.body).toHaveProperty('message', 'Email/Password invalid')
+                        // expect(res.status.message).toContain()
+                        done()
+                    })
+            })
+        })
 
-describe('Login Admin', () => {
-    describe('Login Success', () => {
-        test('Send object replied with status 200 and token', (done) => {
-            request(server)
-                .post('/admin/login')
-                .send({
-                    email: 'andreas.anggara@email.com',
-                    password: 'admin123'
-                })
-                .end((err, res) => {
-                    expect(err).toBe(null)
-                    expect(res.status).toBe(200)
-                    expect(res.body).toHaveProperty('token', expect.any(String))
-                    expect(res.body).toHaveProperty('payload')
-                    expect(res.body.payload).toHaveProperty('id')
-                    expect(res.body.payload).toHaveProperty('email')
-                    expect(res.body.payload).toHaveProperty('authLevel')
-                    done()
-                })
+        describe('Login Employee Error', () => {
+            test('Send wrong form replied with status 401 because wrong email', (done) => {
+                request(server)
+                    .post('/admin/login')
+                    .send({
+                        email: 'staffy@email.com',
+                        password: '123456'
+                    })
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(401)
+                        expect(res.body).toHaveProperty('message', 'Email/Password invalid')
+                        // expect(res.status.message).toContain()
+                        done()
+                    })
+            })
+        })
+
+        describe('Login Employee Error', () => {
+            test('Send wrong form replied with status 401 because user not have access as administrator', (done) => {
+                request(server)
+                    .post('/admin/login')
+                    .send({
+                        email: 'staff@email.com',
+                        password: '123456'
+                    })
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(401)
+                        expect(res.body).toHaveProperty('message', "You're not Administrator")
+                        // expect(res.status.message).toContain()
+                        done()
+                    })
+            })
+        })
+
+        describe('Login Employee Error', () => {
+            test('Send wrong form replied with status 401 because wrong email', (done) => {
+                request(server)
+                    .post('/admin/login')
+                    .send({})
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(500)
+                        // expect(res.body).toHaveProperty('message', "You're not Administrator")
+                        // expect(res.status.message).toContain()
+                        done()
+                    })
+            })
         })
     })
-    
-    describe('Login Admin Error', () => {
-        test('Send wrong form replied with status 401 because wrong password or wrong email', (done) => {
-            request(server)
-                .post('/admin/login')
-                .send({
-                    email: 'andreas.anggara@email.com',
-                    password: '12'
-                })
-                .end((err, res) => {
-                    expect(err).toBe(null)
-                    expect(res.status).toBe(401)
-                    expect(res.body).toHaveProperty('message', 'Email/Password invalid')
-                    // expect(res.status.message).toContain()
-                    done()
-                })
-        })
-    })
 
-    describe('Login Employee Error', () => {
-        test('Send wrong form replied with status 401 because wrong email', (done) => {
-            request(server)
-                .post('/admin/login')
-                .send({
-                    email: 'andreas.anggara@emaiom',
-                    password: '12'
-                })
-                .end((err, res) => {
-                    expect(err).toBe(null)
-                    expect(res.status).toBe(401)
-                    expect(res.body).toHaveProperty('message', 'Email/Password invalid')
-                    // expect(res.status.message).toContain()
-                    done()
-                })
-        })
-    })
-})
-
-// ADD EMPLOYEE =================================================================================
     describe('Add Employee', () => {
         describe('Add Employee Success', () => {
             test('Send object replied with status 201 and json data about new employee', (done) => {
@@ -240,9 +272,6 @@ describe('Login Admin', () => {
         })
     })
 
-
-// FIND ALL EMPLOYEE =================================================================================
-
     describe('Find All Employee', () => {
         describe('Find Employee Success', () => {
             test('Send object replied with status 200 and json data employee', (done) => {
@@ -274,8 +303,6 @@ describe('Login Admin', () => {
         })
     })
 
-// UPDATE EMPLOYEE =================================================================================
-
     describe('Update Employee', () => {
         describe('Update Employee Success', () => {
             test('Send object replied with status 200 and json data about employee', (done) => {
@@ -305,9 +332,25 @@ describe('Login Admin', () => {
         })
 
         describe('Update Employee Error', () => {
-            test('Send object replied with status 404 Internal Server Error', (done) => {
+            test('Send object replied with status 500 Internal Server Error', (done) => {
                 request(server)
-                    .put('/admin/employee/3')
+                    .put('/admin/employee/uyfiufi')
+                    .set('token', tokenAdmin)
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(404)
+                        expect(res.body).toHaveProperty('message')
+                        expect(res.body.message).toContain('Employee not found')
+                        done()
+                    })
+            })
+        })
+
+
+        describe('Update Employee Error', () => {
+            test('Send object replied with status 404 Line 95', (done) => {
+                request(server)
+                    .put('/admin/employee/189')
                     .set('token', tokenAdmin)
                     .end((err, res) => {
                         expect(err).toBe(null)
@@ -320,9 +363,6 @@ describe('Login Admin', () => {
         })
     })
 
-
-// DELETE EMPLOYEE =================================================================================
-
     describe('Delete Employee', () => {
         describe('Delete Employee Success', () => {
             test('Send object replied with status 200 and json data about employee', (done) => {
@@ -332,8 +372,8 @@ describe('Login Admin', () => {
                     .end((err, res) => {
                         expect(err).toBe(null)
                         expect(res.status).toBe(200)
-                        expect(res.body).toHaveProperty('message')
-                        expect(res.body.message).toContain("Employee Deleted")
+                        // expect(res.body).toHaveProperty('message')
+                        // expect(res.body.message).toContain("Employee Deleted")
                         done()
                     })
             })
@@ -354,9 +394,6 @@ describe('Login Admin', () => {
             })
         })
     })
-
-
-// GENERATE QR =================================================================================
 
     describe('Generate QR', () => {
         describe('Generate QR Success', () => {

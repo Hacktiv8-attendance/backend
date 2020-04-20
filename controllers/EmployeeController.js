@@ -4,6 +4,7 @@ const { Op } = require('sequelize')
 const moment = require('moment')
 const { verify, getToken } = require('../helpers/jwt')
 const { hashPassword } = require('../helpers/bcrypt')
+
 class EmployeeController {
   static login(req, res, next) {
     const { email, password } = req.body
@@ -93,15 +94,17 @@ class EmployeeController {
     }
   }
 
-  static findEmployee(req, res, next) {
-    Employee.findAll({
-      where: {
-        SuperiorId: +req.params.id
-      }
-    })
-      .then(response => res.status(200).json(response))
-      .catch(next)
-  }
+  // static findEmployee(req, res, next) {
+  //   Employee.findAll({
+  //     where: {
+  //       SuperiorId: +req.params.id
+  //     }
+  //   })
+  //     .then(response => res.status(200).json(response))
+  //     .catch(next)
+  // }
+
+
   static requestPaidLeave(req, res, next) {
     const { SuperiorId, reason, leaveDate, duration } = req.body
     PaidLeave.create({
@@ -132,6 +135,33 @@ class EmployeeController {
       .catch(next)
   }
 
+  static findOne (req, res, next) {
+    const { email } = req.body
+    Employee
+      .findOne({
+        where: {
+          email
+        }
+      })
+      .then(employee => {
+        if (employee) {
+          res.status(200).json(employee)
+        } else {
+          next({
+              status: 404,
+              message: "Employee not found"
+          })
+        }
+      })
+      .catch( err => {
+          next({
+            status: 404,
+            message: "Employee not found"
+          })
+      })
+  }
+
+  // static findEmployeeAbsence(req, res, next) {
   static findAbsencePerMonth(req, res, next) {
     const { month } = req.query
     Absence.findAll({
@@ -164,18 +194,18 @@ class EmployeeController {
       })
   }
 
-  static findPaidLeave(req, res, next) {
-    PaidLeave.findAll({
-      where: {
-        SuperiorId: +req.decoded.id,
-        completed: false
-      }
-    })
-      .then(response => {
-        res.status(200).json(response)
-      })
-      .catch(next)
-  }
+  // static findPaidLeave(req, res, next) {
+  //   PaidLeave.findAll({
+  //     where: {
+  //       SuperiorId: +req.params.id
+  //     }
+  //   })
+  //     .then(response => {
+  //       res.status(200).json(response)
+  //     })
+  //     .catch(next)
+  // }
+
   static updatePaidLeave(req, res, next) {
     const { status } = req.body
     PaidLeave.update({
@@ -250,13 +280,8 @@ class EmployeeController {
           })
         }
       })
-      .catch(err => {
-        next({
-          status: 404,
-          message: "Employee not found"
-        })
-      })
-  }
+      .catch(next)
+    }
 }
 
 module.exports = EmployeeController
