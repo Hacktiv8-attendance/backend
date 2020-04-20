@@ -1,5 +1,7 @@
 'use strict';
 const { hashPassword } = require('../helpers/bcrypt')
+const email = require('../helpers/email')
+let passwordAfter;
 module.exports = (sequelize, DataTypes) => {
   const Model = sequelize.Sequelize.Model
 
@@ -155,7 +157,42 @@ module.exports = (sequelize, DataTypes) => {
   {
     hooks: {
       beforeCreate: (employee, options) => {
+        passwordAfter = employee.password
         employee.password = hashPassword(employee.password)
+      },
+      beforeUpdate: (employee, options) => {
+        employee.password = hashPassword(employee.password)
+      },
+      afterCreate: (User, options) => {
+        const body = {
+          from: '"HRQ Company" <hacktiv8company@gmail.com',
+          to: User.email,
+          subject: 'Account Registeed',
+          html: `
+          
+          Dear Mr/Mrs <b>${User.name}</b>,<br/>
+          ${User.address}<br/><br/>
+
+          I am writing to inform you that you have been accepted to work for our company as our ${User.role}.<br/>
+          We expect to see you in the office. We would like to discuss your post and the duties that come with it. We will also answer any questions you may have then.<br/><br/>
+
+          Congratulations on getting the post, and we look forward to working with you soon.<br/><br/>
+
+          Here Your Account Credentials:<br/><br/>
+
+          Email: ${User.email}<br/><br/>
+          Password: ${passwordAfter}<br/>
+
+          Sincerely,<br/><br/><br/>
+
+          HRD Team<br/><br/>
+
+          <img alt="HRQ Company Logo" src="https://photos-hrq-upload.s3-ap-southeast-1.amazonaws.com/upload/HRQ_100.png"/>
+          `
+        }
+        email.sendMail(body, (error, info) => {
+          if(error) throw new Error(error)
+        })
       }
     },
     sequelize

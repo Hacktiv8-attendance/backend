@@ -192,7 +192,6 @@ class EmployeeController {
         })
         res.status(200).json(payload)
       })
-      .catch(next)
   }
 
   // static findPaidLeave(req, res, next) {

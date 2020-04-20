@@ -6,7 +6,7 @@ for(let k = 1; k < 5; k++) {
     if(k < 10) k = `0${k}`
     for(let j = 1; j < 20; j++) {
       if(j < 10) j = `0${j}`
-      for(let i = 5; i < 100; i++) {
+      for(let i = 2; i < 104; i++) {
         absence.push({
           EmployeeId: i,
           in: moment(`2020-${k}-${j} 08:30:00`).toISOString(),
@@ -24,7 +24,7 @@ for(let k = 1; k < 5; k++) {
     if(k < 10) k = `0${k}`
     for(let j = 1; j < 29; j++) {
       if(j < 10) j = `0${j}`
-      for(let i = 5; i < 100; i++) {
+      for(let i = 2; i < 104; i++) {
         absence.push({
           EmployeeId: i,
           in: moment(`2020-${k}-${j} 08:30:00`).toISOString(),
