@@ -591,4 +591,23 @@ describe("Admin Routes", () => {
             })
         })
     })
+
+    describe('Upload Image', () => {
+        describe('Upload Image Success', () => {
+            test('Send object replied with status 201 and data about image uploaded', (done) => {
+                request(server)
+                    .post('/admin/upload')
+                    .set('token', tokenAdmin)
+                    .field('name',  'type')
+                    .attach('name', 'assets/free-profile-photo-whatsapp-4.png')
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(201)
+                        // expect(res.body).toEqual(expect.any(Object))
+                        // expect(res.body.message).toEqual(expect.any(String))
+                        done()
+                    })
+            })
+        })
+    })
 })

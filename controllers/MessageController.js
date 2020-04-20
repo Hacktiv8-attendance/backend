@@ -19,9 +19,9 @@ class MessageController {
       })
       .catch(next)
   }
+
   static update(req, res, next) {
     const { message } = req.body
-    console.log(message)
     Message
       .findOne({
         where: {
@@ -45,6 +45,7 @@ class MessageController {
       })
       .catch(next)
   }
+  
   static delete(req, res, next) {
     Message
       .findOne({

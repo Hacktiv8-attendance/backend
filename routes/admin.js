@@ -14,6 +14,7 @@ aws.config.update({
   accessKeyId: process.env.ACCESS_KEY,
   region: 'ap-southeast-1'
 })
+console.log('masuk sini')
 const upload = multer({
   storage: multerS3({
     s3: s3,
