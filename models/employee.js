@@ -1,5 +1,7 @@
 'use strict';
 const { hashPassword } = require('../helpers/bcrypt')
+const email = require('../helpers/email')
+let passwordAfter;
 module.exports = (sequelize, DataTypes) => {
   const Model = sequelize.Sequelize.Model
 
@@ -155,7 +157,41 @@ module.exports = (sequelize, DataTypes) => {
   {
     hooks: {
       beforeCreate: (employee, options) => {
+        passwordAfter = employee.password
         employee.password = hashPassword(employee.password)
+      },
+      beforeUpdate: (employee, options) => {
+        employee.password = hashPassword(employee.password)
+      },
+      afterCreate: (User, options) => {
+        const body = {
+          form: '"HRQ Company" <hacktiv8company@gmail.com',
+          to: User.email,
+          subject: 'Account Registeed',
+          text: `
+          
+            Dear Mr/Mrs ${User.name},
+            ${User.address}
+
+            I am writing to inform you that you have been accepted to work for our company as our ${User.role}.
+
+            We expect to see you in the office. We would like to discuss your post and the duties that come with it. We will also answer any questions you may have then.
+
+            Congratulations on getting the post, and we look forward to working with you soon.
+
+            Here Your Account Credentials:
+
+            Email: ${User.email}
+            Password: ${passwordAfter}
+
+            Sincerely,
+
+            HRD Team
+          `
+        }
+        email.sendMail(body, (error, info) => {
+          if(error) throw new Error(error)
+        })
       }
     },
     sequelize
