@@ -265,9 +265,11 @@ class EmployeeController {
   
             If you requested a password reset for your account in HRQ Company please input code below to application!<br/><br/>
 
-            <b>${randomNumber}</b><br/><br/>
+            <b>${randomNumber}</b><br/>
+            
+            If you didn't make this request, ignore this email.<br/><br/>
   
-            Sincerely,<br/><br/><br/>
+            Sincerely,<br/><br/><br/><br/>
   
             HRD Team<br/><br/>
   
