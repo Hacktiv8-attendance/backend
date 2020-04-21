@@ -208,6 +208,8 @@ class EmployeeController {
 
   static updatePaidLeave(req, res, next) {
     const { status } = req.body
+    let duration;
+    let EmployeeId;
     PaidLeave.update({
       status,
       completed: true
@@ -218,29 +220,36 @@ class EmployeeController {
       returning: true
     })
       .then(response => {
-        response = response[1][0]
-        let inTime = moment(response.leaveDate).add(9, 'hours').toISOString()
-        let outTime = moment(inTime).add(9, 'hours').toISOString()
-        const payload = []
-        for(let i = 0; i < 4; i ++) {
-          payload.push({
-            EmployeeId: response.EmployeeId,
-            in: inTime,
-            out: outTime,
-            status: true,
-            worktime: 9
-          })
-          inTime = moment(inTime).add(1, 'day').toISOString()
-          outTime = moment(inTime).add(9, 'hours').toISOString()
-        }
-        if(status) {
-          Absence.bulkCreate(payload)
-            .then(response => {
-              res.status(201).json({ message: "PaidLeave Submitted" })
+        if(response) {
+          response = response[1][0]
+          duration = response.duration
+          EmployeeId = response.EmployeeId
+          let inTime = moment(response.leaveDate).add(9, 'hours').toISOString()
+          let outTime = moment(inTime).add(9, 'hours').toISOString()
+          const payload = []
+          for(let i = 0; i < duration; i ++) {
+            payload.push({
+              EmployeeId: response.EmployeeId,
+              in: inTime,
+              out: outTime,
+              status: true,
+              worktime: 9
             })
-        } else {
-          res.status(200).json({ message: "PaidLeave Rejected" })
-        }
+            inTime = moment(inTime).add(1, 'day').toISOString()
+            outTime = moment(inTime).add(9, 'hours').toISOString()
+          }
+          if(status) {
+            return Absence.bulkCreate(payload)
+          } else {
+            res.status(200).json({ message: "PaidLeave Rejected" })
+          }
+        } else next ({ status: 404, message: "Paid Leave Not Found" })
+      })
+      .then(response => {
+        return Employee.decrement('paidLeave', { by: duration, where: { id: +EmployeeId } })
+      })
+      .then(response => {
+        if(response) res.status(200).json({ message: "PaidLeave Approved" })
       })
       .catch(next)
   }
