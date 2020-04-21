@@ -24,7 +24,7 @@ const employee = [
     phoneNumber: '0812121212',
     role: 'HRD',
     image_url: "https://photos-hrq-upload.s3-ap-southeast-1.amazonaws.com/upload/Andreas+Anggara+Anindyajati.jpg",
-    authLevel: 2,
+    authLevel: 1,
     SuperiorId: 1,
     paidLeave: 12,
     createdAt: new Date(),
