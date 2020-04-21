@@ -3,8 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   const Absence = sequelize.define('Absence', {
     EmployeeId: DataTypes.INTEGER,
     in : {
-      type: DataTypes.DATE,
-      defaultValue: new Date()
+      type: DataTypes.DATE
     },
     out: DataTypes.DATE,
     worktime: {

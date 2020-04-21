@@ -82,6 +82,7 @@ class EmployeeController {
               } else {
                 Absence.create({
                   EmployeeId,
+                  in: new Date()
                 })
                   .then(response => {
                     res.status(201).json({ message: "Absence Submitted" })
