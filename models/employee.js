@@ -180,8 +180,8 @@ module.exports = (sequelize, DataTypes) => {
 
           Here Your Account Credentials:<br/><br/>
 
-          Email: ${User.email}<br/><br/>
-          Password: ${passwordAfter}<br/>
+          <small>Email: ${User.email}</small><br/>
+          <small>Password: ${passwordAfter}</small><br/><br/>
 
           Sincerely,<br/><br/><br/>
 
