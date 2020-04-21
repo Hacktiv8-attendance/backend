@@ -268,7 +268,7 @@ class EmployeeController {
           const body = {
             from: '"HRQ Company" <hacktiv8company@gmail.com',
             to: response.email,
-            subject: 'Account Registeed',
+            subject: 'Reset Password',
             html: `
             
             <h1>Reset Password?</h1><br/><br/>
