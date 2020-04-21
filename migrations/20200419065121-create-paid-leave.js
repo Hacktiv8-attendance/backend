@@ -9,7 +9,13 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       EmployeeId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Employees",
+          key: "id"
+        },
+        onDelete: "cascade",
+        onUpdate: "cascade"
       },
       SuperiorId: {
         type: Sequelize.INTEGER

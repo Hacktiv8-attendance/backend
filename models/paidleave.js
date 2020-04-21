@@ -60,7 +60,7 @@ module.exports = (sequelize, DataTypes) => {
     sequelize
   })
   PaidLeave.associate = function(models) {
-    // associations can be defined here
+    PaidLeave.belongsTo(models.Employee)
   };
   return PaidLeave;
 };
