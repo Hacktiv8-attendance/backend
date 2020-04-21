@@ -198,7 +198,8 @@ class EmployeeController {
     PaidLeave.findAll({
       where: {
         SuperiorId: +req.decoded.id
-      }
+      },
+      include: [Employee]
     })
       .then(response => {
         res.status(200).json(response)
