@@ -201,6 +201,7 @@ module.exports = (sequelize, DataTypes) => {
   Employee.associate = function(models) {
     Employee.hasMany(models.Absence)
     Employee.hasOne(models.Employee,  {as: "Superior"})
+    Employee.hasMany(models.PaidLeave)
   };
   
   return Employee;
