@@ -95,16 +95,6 @@ class EmployeeController {
     }
   }
 
-  // static findEmployee(req, res, next) {
-  //   Employee.findAll({
-  //     where: {
-  //       SuperiorId: +req.params.id
-  //     }
-  //   })
-  //     .then(response => res.status(200).json(response))
-  //     .catch(next)
-  // }
-
 
   static requestPaidLeave(req, res, next) {
     const { SuperiorId, reason, leaveDate, duration } = req.body
@@ -116,6 +106,38 @@ class EmployeeController {
       duration
     })
       .then(response => {
+        return Employee.findOne({
+          where: {
+            id: +response.EmployeeId
+          },
+          include: [{
+            model: Employee,
+            as: "Superior"
+          }]
+        })
+      })
+      .then(response => {
+        const body = {
+          from: '"HRQ Company" <hacktiv8company@gmail.com',
+          to: response.Superior.email,
+          subject: 'Request Paid Leave',
+          html: `
+          <p>Dear, ${response.Superior.name}</p><br/>
+
+          <p>${response.name} is requesting paid leave because of ${reason} at ${moment(leaveDate).format("L")}</p><br/>
+          
+          <p>Please confirm the paid leave at HRQ Application immediately.</p>
+
+          Sincerely,<br/><br/><br/><br/>
+
+          HRD Team<br/><br/>
+          
+          <img alt="HRQ Company Logo" src="https://photos-hrq-upload.s3-ap-southeast-1.amazonaws.com/upload/HRQ_100.png"/>
+          `
+        }
+        emailSend.sendMail(body, (error, info) => {
+          if(error) throw new Error(error)
+        })
         res.status(201).json({ message: "PaidLeave Created"})
       })
       .catch(next)
@@ -221,11 +243,11 @@ class EmployeeController {
       returning: true
     })
       .then(response => {
-        if(response) {
+        if(response[1][0]) {
           response = response[1][0]
           duration = response.duration
           EmployeeId = response.EmployeeId
-          let inTime = moment(response.leaveDate).add(9, 'hours').toISOString()
+          let inTime = moment(response.leaveDate).toISOString()
           let outTime = moment(inTime).add(9, 'hours').toISOString()
           const payload = []
           for(let i = 0; i < duration; i ++) {
@@ -240,17 +262,74 @@ class EmployeeController {
             outTime = moment(inTime).add(9, 'hours').toISOString()
           }
           if(status) {
-            return Absence.bulkCreate(payload)
+            Absence.bulkCreate(payload)
+            .then(response => {
+              return Employee.decrement('paidLeave', { by: duration, where: { id: +EmployeeId } })
+            })
+            .then(response => {
+              Employee.findOne({
+                where: {
+                  id: +EmployeeId
+                }
+              })
+                .then(response => {
+                  const body = {
+                    from: '"HRQ Company" <hacktiv8company@gmail.com',
+                    to: response.email,
+                    subject: 'Request Paid Leave Approved',
+                    html: `
+                    <p>Dear, ${response.name}</p><br/>
+          
+                    <p>Your Paid Leave request has been approved by your Manager</p><br/>
+      
+                    <p>Please back in time if your leave ended.</p>
+          
+                    Sincerely,<br/><br/><br/><br/>
+          
+                    HRD Team<br/><br/>
+                    
+                    <img alt="HRQ Company Logo" src="https://photos-hrq-upload.s3-ap-southeast-1.amazonaws.com/upload/HRQ_100.png"/>
+                    `
+                  }
+                  emailSend.sendMail(body, (error, info) => {
+                    if(error) throw new Error(error)
+                  })
+                  res.status(200).json({ message: "PaidLeave Approved" })
+                })
+            })
           } else {
-            res.status(200).json({ message: "PaidLeave Rejected" })
+            Employee.findOne({
+              where: {
+                id: +EmployeeId
+              }
+            })
+              .then(response => {
+                const body = {
+                  from: '"HRQ Company" <hacktiv8company@gmail.com',
+                  to: response.email,
+                  subject: 'Request Paid Leave Rejected',
+                  html: `
+                  <p>Dear, ${response.name}</p><br/>
+        
+                  <p>Your Paid Leave request has been rejected by your Manager</p><br/>
+
+                  <p>Please contact your manager for the reason immediately.</p>
+        
+                  Sincerely,<br/><br/><br/><br/>
+        
+                  HRD Team<br/><br/>
+                  
+                  <img alt="HRQ Company Logo" src="https://photos-hrq-upload.s3-ap-southeast-1.amazonaws.com/upload/HRQ_100.png"/>
+                  `
+                }
+                emailSend.sendMail(body, (error, info) => {
+                  if(error) throw new Error(error)
+                  console.log(info)
+                })
+                res.status(200).json({ message: "PaidLeave Rejected" })
+              })
           }
         } else next ({ status: 404, message: "Paid Leave Not Found" })
-      })
-      .then(response => {
-        return Employee.decrement('paidLeave', { by: duration, where: { id: +EmployeeId } })
-      })
-      .then(response => {
-        if(response) res.status(200).json({ message: "PaidLeave Approved" })
       })
       .catch(next)
   }
@@ -268,7 +347,7 @@ class EmployeeController {
           const body = {
             from: '"HRQ Company" <hacktiv8company@gmail.com',
             to: response.email,
-            subject: 'Account Registeed',
+            subject: 'Reset Password',
             html: `
             
             <h1>Reset Password?</h1><br/><br/>

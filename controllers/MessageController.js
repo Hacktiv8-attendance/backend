@@ -2,8 +2,8 @@ const { Message } = require('../models')
 
 class MessageController {
   static create(req, res, next) {
-    const { message } = req.body
-    Message.create({message})
+    const { message, title } = req.body
+    Message.create({message, title})
       .then(response => {
         res.status(201).json(response)
       })
@@ -20,15 +20,15 @@ class MessageController {
       .catch(next)
   }
   static update(req, res, next) {
-    const { message } = req.body
-    Message.update({message}, {
+    const { message, title } = req.body
+    Message.update({message, title}, {
       where: {
         id: +req.params.id
       },
       returning: true
     })
       .then(response => {
-        if(response) res.status(200).json(response[1][0])
+        if(response[1][0]) res.status(200).json(response[1][0])
         else next({ status: 404, message: "Message Not Found" })
       })
       .catch(next)
