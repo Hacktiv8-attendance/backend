@@ -96,7 +96,6 @@ class EmployeeController {
     }
   }
 
-
   static requestPaidLeave(req, res, next) {
     const { SuperiorId, reason, leaveDate, duration } = req.body
     PaidLeave.create({
@@ -137,8 +136,10 @@ class EmployeeController {
           `
         }
         emailSend.sendMail(body, (error, info) => {
+          /*istanbul ignore next */
           if(error) throw new Error(error)
         })
+        
         res.status(201).json({ message: "PaidLeave Created"})
       })
       .catch(next)
@@ -244,6 +245,7 @@ class EmployeeController {
       returning: true
     })
       .then(response => {
+        /*istanbul ignore next */
         if(response[1][0]) {
           response = response[1][0]
           duration = response.duration
@@ -293,6 +295,7 @@ class EmployeeController {
                     `
                   }
                   emailSend.sendMail(body, (error, info) => {
+                    /*istanbul ignore next */
                     if(error) throw new Error(error)
                   })
                   res.status(200).json({ message: "PaidLeave Approved" })
@@ -324,8 +327,8 @@ class EmployeeController {
                   `
                 }
                 emailSend.sendMail(body, (error, info) => {
+                  /*istanbul ignore next */
                   if(error) throw new Error(error)
-                  console.log(info)
                 })
                 res.status(200).json({ message: "PaidLeave Rejected" })
               })
@@ -374,7 +377,6 @@ class EmployeeController {
         // }
       })
   }
-
 
   static resetPassword(req, res, next) {
     const { email, password } = req.body

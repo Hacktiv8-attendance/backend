@@ -29,6 +29,7 @@ fs
   });
 
 Object.keys(db).forEach(modelName => {
+  /*istanbul ignore next */
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }

@@ -73,7 +73,8 @@ describe("Admin Routes", () => {
                             let token = getToken(payload)
                             tokenAdmin = token
                             return Message.create({
-                                message : 'Kerja yang bener ya, jangan main main'
+                                message : 'Kerja yang bener ya, jangan main main',
+                                title : 'reminder'
                             })
                             // done()
                         } else {
@@ -498,7 +499,8 @@ describe("Admin Routes", () => {
                     .post('/admin/message')
                     .set('token', tokenAdmin)
                     .send({
-                        message: 'Ayo kerja yang rajin'
+                        message: 'Ayo kerja yang rajin',
+                        title: 'requirement'
                     })
                     .end((err, res) => {
                         expect(err).toBe(null)

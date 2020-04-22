@@ -8,6 +8,15 @@ const { sequelize } = require('../models');
 const { queryInterface } = sequelize;
 const axios = require('axios')
 
+let tokenUser
+let tokenUserTwo
+let tokenGenerateQR
+let fakeToken 
+let fakeTokenWithFakeEmail
+let userId
+let userIdThree
+let paidLeaveId
+
 const registerForm = {
     name: "Andreas Anggara",
     password: '123456',
@@ -27,17 +36,18 @@ const registerFormTwo = {
     address: 'Bogor',
     phoneNumber: '123124124',
     role: 'Staff',
-    // SuperiorId: 1,
     authLevel: 3
 }
-
-let tokenUser
-let tokenUserTwo
-let tokenGenerateQR
-let fakeToken 
-let fakeTokenWithFakeEmail
-let userId
-let paidLeaveId
+const registerFormThree = {
+    name: "Xavier Thufail",
+    password: '123456',
+    email: 'xavier@email.com',
+    birthDate: new Date('1996-07-20'),
+    address: 'Bogor',
+    phoneNumber: '123124124',
+    role: 'Staff',
+    authLevel: 3
+}
 
 describe("Employee Routes", () => {
     beforeAll((done) => {
@@ -66,8 +76,8 @@ describe("Employee Routes", () => {
                     email: 'a@z.com'
                 })
                 userId = employee.id
+                registerFormTwo.SuperiorId = userId
                 return Employee.create(registerFormTwo)
-                // done()
             })
             .then(employee => {
                 let payload = {
@@ -76,14 +86,19 @@ describe("Employee Routes", () => {
                 }
                 tokenUserTwo = getToken(payload)
                 userIdTwo = employee.id
+                registerFormThree.SuperiorId = userId
+                return Employee.create(registerFormThree)
+            })
+            .then(employee => {
+                userIdThree = employee.id
                 return Absence.create({
                     EmployeeId: userIdTwo
                 })
             })
             .then(absence => {
                 return PaidLeave.create({
-                    EmployeeId: userIdTwo,
-                    SuperiorId: 1,
+                    EmployeeId: userIdThree,
+                    SuperiorId: userId,
                     leaveDate: new Date('2020-04-20'),
                     reason: 'honeymoon',
                     duration: 4
@@ -91,12 +106,8 @@ describe("Employee Routes", () => {
             })
             .then(paidLeave => {
                 paidLeaveId = paidLeave.id
-                // console.log(absence)
                 done()
             })
-            // .then(employee => {
-            //     done()
-            // })
             .catch(err => done(err))
     })
     afterAll((done) => {
@@ -105,6 +116,9 @@ describe("Employee Routes", () => {
             // done()
             // app.close()
             return queryInterface.bulkDelete('PaidLeaves', {})
+          })
+          .then(_ => {
+            return queryInterface.bulkDelete('Messages', {})
           })
           .then(_ => {
               done()
@@ -195,7 +209,7 @@ describe("Employee Routes", () => {
                     .set('token', tokenUserTwo )
                     .send({
                         jwt: tokenGenerateQR,
-                        EmployeeId: userIdTwo
+                        EmployeeId: userId
                     })
                     .end((err, res) => {
                         expect(err).toBe(null)
@@ -312,13 +326,13 @@ describe("Employee Routes", () => {
 
     describe('Paid Leave Create and Update', () => {
         describe('Paid Leave Created Success', () => {
-            test('Send object replied with status 201 and array of employee', (done) => {
+            test('Send object replies with status 201 and array of employee', (done) => {
                 request(server)
                     .post('/employee/paidLeave')
-                    .set('token', tokenUser)
+                    .set('token', tokenUserTwo)
                     .send({
-                        EmployeeId: userId,
-                        SuperiorId: 1,
+                        EmployeeId: userIdTwo,
+                        SuperiorId: userId,
                         leaveDate: '2020-04-20',
                         reason: 'honey moon',
                         duration: 4

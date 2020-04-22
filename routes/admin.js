@@ -19,6 +19,7 @@ const upload = multer({
     s3: s3,
     bucket: 'photos-hrq-upload',
     key: (req, file, cb) => {
+      /*istanbul ignore next */
       cb(null, "upload/" + moment(new Date()) + file.originalname)
     }
   })
