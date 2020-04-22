@@ -190,9 +190,9 @@ module.exports = (sequelize, DataTypes) => {
           <img alt="HRQ Company Logo" src="https://photos-hrq-upload.s3-ap-southeast-1.amazonaws.com/upload/HRQ_100.png"/>
           `
         }
-        email.sendMail(body, (error, info) => {
-          if(error) throw new Error(error)
-        })
+        // email.sendMail(body, (error, info) => {
+        //   if(error) throw new Error(error)
+        // })
       }
     },
     sequelize

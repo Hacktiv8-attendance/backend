@@ -1,12 +1,21 @@
 // const server = require('../server')
 require('dotenv').config()
-const server = require('../bin/http')
+const server = require('../app')
 const request = require('supertest')
 const { getToken } = require('../helpers/jwt')
 const { Employee, Absence, PaidLeave } = require('../models')
 const { sequelize } = require('../models');
 const { queryInterface } = sequelize;
 const axios = require('axios')
+
+let tokenUser
+let tokenUserTwo
+let tokenGenerateQR
+let fakeToken 
+let fakeTokenWithFakeEmail
+let userId
+let userIdThree
+let paidLeaveId
 
 const registerForm = {
     name: "Andreas Anggara",
@@ -27,16 +36,18 @@ const registerFormTwo = {
     address: 'Bogor',
     phoneNumber: '123124124',
     role: 'Staff',
-    // SuperiorId: 1,
     authLevel: 3
 }
-
-let tokenUser
-let tokenUserTwo
-let tokenGenerateQR
-let fakeToken 
-let userId
-let paidLeaveId
+const registerFormThree = {
+    name: "Xavier Thufail",
+    password: '123456',
+    email: 'xavier@email.com',
+    birthDate: new Date('1996-07-20'),
+    address: 'Bogor',
+    phoneNumber: '123124124',
+    role: 'Staff',
+    authLevel: 3
+}
 
 describe("Employee Routes", () => {
     beforeAll((done) => {
@@ -61,9 +72,12 @@ describe("Employee Routes", () => {
                 fakeToken = getToken({
                     key: 'faketoken'
                 }) 
+                fakeTokenWithFakeEmail = getToken({
+                    email: 'a@z.com'
+                })
                 userId = employee.id
+                registerFormTwo.SuperiorId = userId
                 return Employee.create(registerFormTwo)
-                // done()
             })
             .then(employee => {
                 let payload = {
@@ -72,14 +86,19 @@ describe("Employee Routes", () => {
                 }
                 tokenUserTwo = getToken(payload)
                 userIdTwo = employee.id
+                registerFormThree.SuperiorId = userId
+                return Employee.create(registerFormThree)
+            })
+            .then(employee => {
+                userIdThree = employee.id
                 return Absence.create({
                     EmployeeId: userIdTwo
                 })
             })
             .then(absence => {
                 return PaidLeave.create({
-                    EmployeeId: userIdTwo,
-                    SuperiorId: 1,
+                    EmployeeId: userIdThree,
+                    SuperiorId: userId,
                     leaveDate: new Date('2020-04-20'),
                     reason: 'honeymoon',
                     duration: 4
@@ -87,12 +106,8 @@ describe("Employee Routes", () => {
             })
             .then(paidLeave => {
                 paidLeaveId = paidLeave.id
-                // console.log(absence)
                 done()
             })
-            // .then(employee => {
-            //     done()
-            // })
             .catch(err => done(err))
     })
     afterAll((done) => {
@@ -103,11 +118,13 @@ describe("Employee Routes", () => {
             return queryInterface.bulkDelete('PaidLeaves', {})
           })
           .then(_ => {
+            return queryInterface.bulkDelete('Messages', {})
+          })
+          .then(_ => {
               done()
           })
           .catch(err => done(err))
     })
-    // afterEach(() => app.close());
 
     describe('Login Employee', () => {
         describe('Login Success', () => {
@@ -192,7 +209,7 @@ describe("Employee Routes", () => {
                     .set('token', tokenUserTwo )
                     .send({
                         jwt: tokenGenerateQR,
-                        EmployeeId: userIdTwo
+                        EmployeeId: userId
                     })
                     .end((err, res) => {
                         expect(err).toBe(null)
@@ -216,6 +233,43 @@ describe("Employee Routes", () => {
                         expect(err).toBe(null)
                         expect(res.status).toBe(400)
                         expect(res.body).toHaveProperty('message',  "Invalid QR CODE" )
+                        done()
+                    })
+            })
+        })
+
+        describe('Send QR  Error', () => {
+            test('Send wrong invalid token and response status 401', (done) => {
+                request(server)
+                    .post('/employee/sendQR')
+                    .set('token', fakeTokenWithFakeEmail )
+                    .send({
+                        jwt: fakeToken,
+                        EmployeeId: userId
+                    })
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(401)
+                        expect(res.body).toHaveProperty('message', 'Please Login First!')
+                        done()
+                    })
+            })
+        })
+
+        describe('Send QR  Error', () => {
+            test('Send wrong invalid qr code and response status 500', (done) => {
+                request(server)
+                    .post('/employee/sendQR')
+                    .set('token', fakeToken )
+                    .send({
+                        jwt: fakeToken,
+                        EmployeeId: userId
+                    })
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(500)
+                        expect(res.body).toHaveProperty("message")
+                        expect(res.body.message).toEqual(expect.any(String))
                         done()
                     })
             })
@@ -252,15 +306,33 @@ describe("Employee Routes", () => {
         })
     })
 
+    describe('Find Paid Leave Create and Update', () => {
+        describe('Find Paid Leave Success', () => {
+            test('Send object replied with status 200 and array of employee', (done) => {
+                request(server)
+                    .get('/employee/paidLeave')
+                    .set('token', tokenUser)
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(200)
+                        // expect(res.body).toHaveProperty('message')
+                        // expect(res.body.message).toEqual("PaidLeave Created")
+                        done()
+                    })
+            })
+        })
+
+    })
+
     describe('Paid Leave Create and Update', () => {
         describe('Paid Leave Created Success', () => {
-            test('Send object replied with status 201 and array of employee', (done) => {
+            test('Send object replies with status 201 and array of employee', (done) => {
                 request(server)
                     .post('/employee/paidLeave')
-                    .set('token', tokenUser)
+                    .set('token', tokenUserTwo)
                     .send({
-                        EmployeeId: userId,
-                        SuperiorId: 1,
+                        EmployeeId: userIdTwo,
+                        SuperiorId: userId,
                         leaveDate: '2020-04-20',
                         reason: 'honey moon',
                         duration: 4
@@ -285,8 +357,8 @@ describe("Employee Routes", () => {
                     })
                     .end((err, res) => {
                         expect(err).toBe(null)
-                        expect(res.status).toBe(201)
-                        expect(res.body).toHaveProperty('message', "PaidLeave Submitted")
+                        expect(res.status).toBe(200)
+                        expect(res.body).toHaveProperty('message', "PaidLeave Approved")
                         done()
                     })
             })
@@ -306,27 +378,22 @@ describe("Employee Routes", () => {
             })
         })
 
-        // describe('Paid Leave Updated Success', () => {
-        //     test('Send wrong form replied with status 500 because data is null', (done) => {
-        //         request(server)
-        //             .post('/employee/paidLeave')
-        //             .set('token', tokenUser)
-        //             .send({
-        //                 EmployeeId: 0,
-        //                 SuperiorId: 0,
-        //                 leaveDate: new Date(),
-        //                 reason: '',
-        //                 duration: 0
-        //             })
-        //             .end((err, res) => {
-        //                 expect(err).toBe(null)
-        //                 expect(res.status).toBe(201)
-        //                 expect(res.body).toHaveProperty('message', "Please Login First!")
-        //                 // expect(res.body).toHaveProperty('error', 'Email/Password invalid')
-        //                 done()
-        //             })
-        //     })
-        // })
+        describe('Paid Leave Create Error', () => {
+            test('Send wrong form replied with status 400 because data is null', (done) => {
+                request(server)
+                    .post('/employee/paidLeave')
+                    .set('token', tokenUser)
+                    .send({
+                    })
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(400)
+                        // expect(res.body).toHaveProperty('message', "Please Login First!")
+                        // expect(res.body).toHaveProperty('error', 'Email/Password invalid')
+                        done()
+                    })
+            })
+        })
         
         describe('Paid Leave Error', () => {
             test('Send wrong form replied with status 401 because user not login yet', (done) => {
@@ -492,6 +559,26 @@ describe("Employee Routes", () => {
                     })
             })
         })
+    })
+
+    describe('Request Password Employee', () => {
+        describe('Reset Password Success', () => {
+            test('Replied with status 200', (done) => {
+                request(server)
+                    .post('/employee/requestCode')
+                    .send({
+                        email: 'mail@mail.com'
+                    })
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(200)
+                        // expect(res.body).toEqual(expect.any(Object))
+                        expect(res.body).toHaveProperty("code")
+                        done()
+                    })
+            })
+        })
+
     })
 })
 
