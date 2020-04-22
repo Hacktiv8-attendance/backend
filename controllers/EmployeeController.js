@@ -149,7 +149,7 @@ class EmployeeController {
       where: {
         EmployeeId: +req.decoded.id,
         in: {
-          [Op.gte]: moment().subtract(1, 'month').toDate()
+          [Op.gte]: moment(moment(new Date()).format('YYYY-MM')).toDate()
         }
       },
     })
