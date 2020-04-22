@@ -3,3 +3,4 @@ config
 .env
 test.js
 example.http
+ecosystem.config.js
