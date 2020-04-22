@@ -11,7 +11,7 @@ class EmployeeController {
     const { email, password } = req.body
     Employee.findOne({
       where: {
-        email
+        email: email.toLowerCase()
       }
     })
     .then(response => {
@@ -125,7 +125,7 @@ class EmployeeController {
           html: `
           <p>Dear, ${response.Superior.name}</p><br/>
 
-          <p>${response.name} is requesting paid leave because of ${reason} at ${moment(leaveDate).format("L")}</p><br/>
+          <p>${response.name} is requesting paid leave because of ${reason} at ${moment(leaveDate).format("L")} for ${duration} day(s) </p><br/>
           
           <p>Please confirm the paid leave at HRQ Application immediately.</p>
 
@@ -277,11 +277,11 @@ class EmployeeController {
                   const body = {
                     from: '"HRQ Company" <hacktiv8company@gmail.com',
                     to: response.email,
-                    subject: 'Request Paid Leave Approved',
+                    subject: 'Paid Leave Approved',
                     html: `
                     <p>Dear, ${response.name}</p><br/>
           
-                    <p>Your Paid Leave request has been approved by your Manager</p><br/>
+                    <p>Your Paid Leave request has been approved by your Superior</p><br/>
       
                     <p>Please back in time if your leave ended.</p>
           
@@ -308,13 +308,13 @@ class EmployeeController {
                 const body = {
                   from: '"HRQ Company" <hacktiv8company@gmail.com',
                   to: response.email,
-                  subject: 'Request Paid Leave Rejected',
+                  subject: 'Paid Leave Rejected',
                   html: `
                   <p>Dear, ${response.name}</p><br/>
         
-                  <p>Your Paid Leave request has been rejected by your Manager</p><br/>
+                  <p>Your Paid Leave request has been rejected by your Superior</p><br/>
 
-                  <p>Please contact your manager for the reason immediately.</p>
+                  <p>Please contact your Superior for the reason immediately.</p>
         
                   Sincerely,<br/><br/><br/><br/>
         
