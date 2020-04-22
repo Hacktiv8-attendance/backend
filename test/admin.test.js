@@ -620,7 +620,7 @@ describe("Admin Routes", () => {
     //                 .set('token', tokenAdmin)
     //                 .type('form')
     //                 .field('name',  'type')
-    //                 .attach('name', './assets/free-profile-photo-whatsapp-4.png')
+    //                 // .attach('name', './assets/free-profile-photo-whatsapp-4.png')
     //                 .end((err, res) => {
     //                     expect(err).toBe(null)
     //                     expect(res.status).toBe(500)
