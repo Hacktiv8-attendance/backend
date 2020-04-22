@@ -15,17 +15,17 @@ module.exports = function (req, res, next) {
                         next()
                         return null
                     } else {
-                        throw ({
+                        next ({
                             status: 401,
                             message: 'Please Login First!'
                         })
                     }
                 })
                 .catch(err => {
-                    throw err
+                    next(err)
                 })
         } catch (error) {
-            next(error)
+            // next(error)
         }
     } else {
         next({

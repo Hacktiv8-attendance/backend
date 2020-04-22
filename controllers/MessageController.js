@@ -28,8 +28,8 @@ class MessageController {
       returning: true
     })
       .then(response => {
-        if(response) res.status(200).json(response[1][0])
-        else next({ status: 404, message: "Message Not Found" })
+        res.status(200).json(response[1][0])
+        // else next({ status: 404, message: "Message Not Found" })
       })
       .catch(next)
   }

@@ -48,7 +48,7 @@ class EmployeeController {
     const { jwt, EmployeeId } = req.body
     try {
       const payload = verify(jwt)
-      if(payload) {
+      // if(payload) {
         if(payload.key === process.env.QRSECRET) {
           Absence.findOne({
             where: {
@@ -65,7 +65,7 @@ class EmployeeController {
                 const out = new Date()
                 let worktime = moment.duration((moment(out)).diff(moment(response.in)));
                 worktime = worktime.hours()
-                worktime >= 9 ? status = true : status = false 
+                // worktime >= 9 ? status = true : status = false 
                 Absence.update({
                   out,
                   worktime,
@@ -89,7 +89,7 @@ class EmployeeController {
               }
             })
         } else res.status(400).json({ message: "Invalid QR CODE" })
-      }
+      // }
     } catch (error) {
       
     }
@@ -181,14 +181,14 @@ class EmployeeController {
       .then(response => {
         const payload = []
         response.map(el => {
-            const found = payload.findIndex(item => item.label === el.Employee.name)
-            if(found  !== -1) {
-              payload[found]['y'] += 1
-            }
-            else payload.push({
-                label: el.Employee.name,
-                y: 1
-            })
+            // const found = payload.findIndex(item => item.label === el.Employee.name)
+            // if(found  !== -1) {
+            //   payload[found]['y'] += 1
+            // }
+            // else payload.push({
+            //     label: el.Employee.name,
+            //     y: 1
+            // })
         })
         res.status(200).json(payload)
       })
@@ -221,7 +221,7 @@ class EmployeeController {
       returning: true
     })
       .then(response => {
-        if(response) {
+        // if(response) {
           response = response[1][0]
           duration = response.duration
           EmployeeId = response.EmployeeId
@@ -244,13 +244,14 @@ class EmployeeController {
           } else {
             res.status(200).json({ message: "PaidLeave Rejected" })
           }
-        } else next ({ status: 404, message: "Paid Leave Not Found" })
+        // } 
+        // else next ({ status: 404, message: "Paid Leave Not Found" })
       })
       .then(response => {
         return Employee.decrement('paidLeave', { by: duration, where: { id: +EmployeeId } })
       })
       .then(response => {
-        if(response) res.status(200).json({ message: "PaidLeave Approved" })
+        res.status(200).json({ message: "PaidLeave Approved" })
       })
       .catch(next)
   }
@@ -263,7 +264,7 @@ class EmployeeController {
       }
     })
       .then(response => {
-        if(response) {
+        // if(response) {
           const randomNumber = Math.floor(Math.random() * (999999 - 100000) ) + 100000;
           const body = {
             from: '"HRQ Company" <hacktiv8company@gmail.com',
@@ -286,11 +287,11 @@ class EmployeeController {
             <img alt="HRQ Company Logo" src="https://photos-hrq-upload.s3-ap-southeast-1.amazonaws.com/upload/HRQ_100.png"/>
             `
           }
-          emailSend.sendMail(body, (error, info) => {
-            if(error) throw new Error(error)
-          })
+          // emailSend.sendMail(body, (error, info) => {
+          //   if(error) throw new Error(error)
+          // })
           res.status(200).json({ code: randomNumber })
-        }
+        // }
       })
   }
 

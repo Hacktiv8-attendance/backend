@@ -1,7 +1,7 @@
 const request = require('supertest');
 const app = require('../app');
-const server = require('../bin/http')
-const { Employee } = require('../models')
+const server = require('../app')
+const { Employee, Message } = require('../models')
 const { getToken } = require('../helpers/jwt')
 const { comparePassword } = require('../helpers/bcrypt')
 // const { sequelize } = require('../models');
@@ -9,6 +9,8 @@ const { comparePassword } = require('../helpers/bcrypt')
 let tokenAdmin
 let adminId
 let userId
+let messageId 
+
 const dateBirth = new Date('1996-07-01')
 const adminData = {
     name: "Andreas Anggara",
@@ -70,7 +72,10 @@ describe("Admin Routes", () => {
                             }
                             let token = getToken(payload)
                             tokenAdmin = token
-                            done()
+                            return Message.create({
+                                message : 'Kerja yang bener ya, jangan main main'
+                            })
+                            // done()
                         } else {
                             done({
                                 status: 401,
@@ -91,6 +96,10 @@ describe("Admin Routes", () => {
                     })
                 }
             })
+            .then(message => {
+                messageId = message.id
+                done()
+            })
             .catch(err => done(err))
     })
     afterAll((done) => {
@@ -99,6 +108,11 @@ describe("Admin Routes", () => {
                 where: {}
             })
             .then(response => {
+                return Message.destroy({
+                    where: {}
+                })
+            })
+            .then(message => {
                 done()
             })
             .catch(err => done(err))
@@ -213,6 +227,27 @@ describe("Admin Routes", () => {
                     })
             })
         })
+
+        // describe('Add Employee Error Sequelize Unique Constraint Error', () => {
+        //     test('Send object replied with status 201 and json data about new employee', (done) => {
+        //         request(server)
+        //             .post('/admin/employee')
+        //             .set('token', tokenAdmin)
+        //             .send({
+        //                 name: 'Staff Tauladan',
+        //                 email: 'staff@email.com',
+        //                 password: '123456',
+        //                 authLevel: 2
+        //               })
+        //             .end((err, res) => {
+        //                 expect(err).toBe(null)
+        //                 expect(res.status).toBe(500)
+        //                 expect(res.body).toHaveProperty('message','Bad Request')
+        //                 expect(res.body).toHaveProperty('errors', expect.any(Array))
+        //                 done()
+        //             })
+        //     })
+        // })
 
         describe('Add Employee Error', () => {
             test('Send wrong form replied with status 400 because required column is empty', (done) => {
@@ -380,15 +415,14 @@ describe("Admin Routes", () => {
         })
 
         describe('Delete Employee Error', () => {
-            test('Send object replied with status 500 Internal Server Error', (done) => {
+            test('Send object replied with status 404 Employee Not Found', (done) => {
                 request(server)
-                    .delete('/admin/employees/0')
+                    .delete('/admin/employee/0')
                     .set('token', tokenAdmin)
                     .end((err, res) => {
                         expect(err).toBe(null)
                         expect(res.status).toBe(404)
-                        // expect(res.body).toHaveProperty('error')
-                        // expect(res.body.error).toContain('Employee not found')
+                        expect(res.body).toEqual(expect.any(Object))
                         done()
                     })
             })
@@ -424,4 +458,175 @@ describe("Admin Routes", () => {
             })
         })
     })
+
+    describe('Get Absence per Month', () => {
+        describe('Get Absence per Month Success', () => {
+            test('Send object replied with status 200 and json data employee', (done) => {
+                request(server)
+                    .get('/admin/absence')
+                    .set('token', tokenAdmin)
+                    .query({month: ('2020-04-21')})
+                    .query({SuperiorId : 1})
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(200)
+                        expect(res.body).toEqual(expect.any(Array))
+                        done()
+                    })
+            })
+        })
+
+        // describe('Find All Employee Error', () => {
+        //     test('Send object replied with status 500 Internal Server Error', (done) => {
+        //         request(server)
+        //             .get('/admin/employe')
+        //             .set('token', tokenAdmin)
+        //             .end((err, res) => {
+        //                 expect(err).toBe(null)
+        //                 expect(res.status).toBe(404)
+        //                 // expect(res.body.error).toContain('Internal Server Error')
+        //                 done()
+        //             })
+        //     })
+        // })
+    })
+
+    describe('Post Message', () => {
+        describe('Post Message Success', () => {
+            test('Send object replied with status 201 and json data employee', (done) => {
+                request(server)
+                    .post('/admin/message')
+                    .set('token', tokenAdmin)
+                    .send({
+                        message: 'Ayo kerja yang rajin'
+                    })
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(201)
+                        expect(res.body.id).toEqual(expect.any(Number))
+                        expect(res.body.message).toEqual(expect.any(String))
+                        expect(res.body.createdAt).toEqual(expect.any(String))
+                        // expect(res.body).toEqual(expect.any(Array))
+                        done()
+                    })
+            })
+        })
+    })
+
+    describe('Find All Message', () => {
+        describe('Find All Message Success', () => {
+            test('Send object replied with status 200 and array of messages', (done) => {
+                request(server)
+                    .get('/admin/message')
+                    .set('token', tokenAdmin)
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(200)
+                        expect(res.body).toEqual(expect.any(Array))
+                        // expect(res.body).toEqual(expect.any(Array))
+                        done()
+                    })
+            })
+        })
+    })
+
+    describe('Update Message', () => {
+        describe('Update Message Success', () => {
+            test('Send object replied with status 200 and array of messages', (done) => {
+                request(server)
+                    .put('/admin/message/' + messageId)
+                    .set('token', tokenAdmin)
+                    .send({
+                        message: 'Udah ganti nih '
+                    })
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(200)
+                        expect(res.body).toEqual(expect.any(Object))
+                        expect(res.body).toHaveProperty('createdAt')
+                        expect(res.body.message).toEqual(expect.any(String))
+                        expect(res.body.createdAt).toEqual(expect.any(String))
+                        done()
+                    })
+            })
+        })
+
+        // describe('Update Message Error', () => {
+        //     test('Send object replied with status 404 and message error', (done) => {
+        //         request(server)
+        //             .put('/admin/message/' + 0)
+        //             .set('token', tokenAdmin)
+        //             .send({
+        //                 message: 'Udah ganti nih '
+        //             })
+        //             .end((err, res) => {
+        //                 expect(err).toBe(null)
+        //                 expect(res.status).toBe(404)
+        //                 expect(res.body).toEqual(expect.any(Object))
+        //                 expect(res.body).toHaveProperty('message')
+        //                 expect(res.body.message).toEqual(expect.any(String))
+        //                 done()
+        //             })
+        //     })
+        // })
+    })
+
+    describe('Delete Message', () => {
+        describe('Delete Message Success', () => {
+            test('Send object replied with status 200 and array of messages', (done) => {
+                request(server)
+                    .delete('/admin/message/' + messageId)
+                    .set('token', tokenAdmin)
+                    .send({
+                        message: 'Udah ganti nih '
+                    })
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(200)
+                        expect(res.body).toEqual(expect.any(Object))
+                        expect(res.body.message).toEqual(expect.any(String))
+                        done()
+                    })
+            })
+        })
+
+        describe('Delete Message Error', () => {
+            test('Send object replied with status 404 and message error', (done) => {
+                request(server)
+                    .delete('/admin/message/' + 0)
+                    .set('token', tokenAdmin)
+                    .send({
+                        message: 'Udah ganti nih '
+                    })
+                    .end((err, res) => {
+                        expect(err).toBe(null)
+                        expect(res.status).toBe(404)
+                        expect(res.body).toEqual(expect.any(Object))
+                        expect(res.body).toHaveProperty('message')
+                        expect(res.body.message).toEqual(expect.any(String))
+                        done()
+                    })
+            })
+        })
+    })
+
+    // describe('Upload Image', () => {
+    //     describe('Upload Image Success', () => {
+    //         test('Send object replied with status 201 and data about image uploaded', (done) => {
+    //             request(server)
+    //                 .post('/admin/upload')
+    //                 .set('token', tokenAdmin)
+    //                 .type('form')
+    //                 .field('name',  'type')
+    //                 .attach('name', './assets/free-profile-photo-whatsapp-4.png')
+    //                 .end((err, res) => {
+    //                     expect(err).toBe(null)
+    //                     expect(res.status).toBe(500)
+    //                     expect(res.body).toHaveProperty('message')
+    //                     expect(res.body.message).toEqual('error')
+    //                     done()
+    //                 })
+    //         })
+    //     })
+    // })
 })
