@@ -167,7 +167,7 @@ module.exports = (sequelize, DataTypes) => {
         const body = {
           from: '"HRQ Company" <hacktiv8company@gmail.com',
           to: User.email,
-          subject: 'Account Registeed',
+          subject: 'Account Registered',
           html: `
           
           Dear Mr/Mrs <b>${User.name}</b>,<br/>
@@ -176,12 +176,12 @@ module.exports = (sequelize, DataTypes) => {
           I am writing to inform you that you have been accepted to work for our company as our ${User.role}.<br/>
           We expect to see you in the office. We would like to discuss your post and the duties that come with it. We will also answer any questions you may have then.<br/><br/>
 
-          Congratulations on getting the post, and we look forward to working with you soon.<br/><br/>
+          Congratulations on getting the position, and we look forward to working with you soon.<br/><br/>
 
           Here Your Account Credentials:<br/><br/>
 
-          Email: ${User.email}<br/><br/>
-          Password: ${passwordAfter}<br/>
+          <small>Email: ${User.email}</small><br/>
+          <small>Password: ${passwordAfter}</small><br/><br/>
 
           Sincerely,<br/><br/><br/>
 
@@ -200,8 +200,8 @@ module.exports = (sequelize, DataTypes) => {
 
   Employee.associate = function(models) {
     Employee.hasMany(models.Absence)
-    Employee.hasOne(models.Employee,  {as: "Superior"})
     Employee.hasMany(models.PaidLeave)
+    Employee.belongsTo(models.Employee,  {as: "Superior", foreignKey: "SuperiorId"})
   };
   
   return Employee;

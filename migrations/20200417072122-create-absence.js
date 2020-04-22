@@ -18,8 +18,7 @@ module.exports = {
         onUpdate: "cascade"
       },
       in : {
-        type: Sequelize.DATE,
-        defaultValue: new Date()
+        type: Sequelize.DATE
       },
       out: {
         type: Sequelize.DATE
