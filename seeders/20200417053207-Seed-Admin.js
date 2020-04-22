@@ -64,7 +64,7 @@ for(let i = 0; i < 100; i++) {
   employee.push({
     name: faker.name.firstName(),
     password: hashPassword('random123'),
-    email: faker.internet.email(),
+    email: faker.internet.email().toLowerCase(),
     birthDate: new Date("1996-01-01"),
     address: faker.address.city(),
     phoneNumber: faker.phone.phoneNumber(),
